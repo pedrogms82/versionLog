@@ -1,0 +1,32 @@
+ db.estados.find().pretty()
+{
+        "_id" : ObjectId("58b010fc66c2123fc13cc95b"),
+        "tipo" : "A",
+        "nombre" : "Abierta"
+}
+{
+        "_id" : ObjectId("58b0110866c2123fc13cc95c"),
+        "tipo" : "P",
+        "nombre" : "En proceso"
+}
+{
+        "_id" : ObjectId("58b0111066c2123fc13cc95d"),
+        "tipo" : "F",
+        "nombre" : "Finalizada"
+}
+> db.modulos.find().pretty()
+{
+        "_id" : ObjectId("58b015b866c2123fc13cc95e"),
+        "tipo" : "C",
+        "nombre" : "Contabilidad"
+}
+{
+        "_id" : ObjectId("58b015c066c2123fc13cc95f"),
+        "tipo" : "N",
+        "nombre" : "Nominas"
+}
+{
+        "_id" : ObjectId("58b015cb66c2123fc13cc960"),
+        "tipo" : "P",
+        "nombre" : "Proyectos"
+}

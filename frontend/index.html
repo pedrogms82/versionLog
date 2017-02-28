@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="es" ng-app="versionLog">
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" type="image/png" href="assets/img/favicon.ico">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+	<title>versionLog aplicaciones MPDL</title>
+
+	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+		<!-- Bootstrap core CSS     -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Animation library for notifications   -->
+    <link href="assets/css/animate.min.css" rel="stylesheet"/>
+    <!--  Light Bootstrap Table core CSS    -->
+    <link href="assets/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="assets/css/demo.css" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+    <link href="assets/css/pe-icon-7-stroke.css" rel="stylesheet" />
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-image="assets/img/sidebar-5.jpg">
+
+    <!--
+
+        Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
+        Tip 2: you can also add an image using data-image tag
+
+    -->
+
+    	<div class="sidebar-wrapper">
+            <div class="logo">
+                <span class="simple-text">
+                    MPDL
+                </span>
+            </div>
+
+            <ul class="nav">
+                <li class="active">
+                    <a href="#">
+                        <i class="pe-7s-graph"></i>
+                        <p>VersionLog</p>
+                    </a>
+                </li>
+
+				<li class="active-pro">
+                    <a href="#">
+                        <i class="pe-7s-rocket"></i>
+                        <p>Reportar Error</p>
+                    </a>
+                </li>
+            </ul>
+    	</div>
+    </div>
+
+    <div class="main-panel">
+        <nav class="navbar navbar-default navbar-fixed">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Escritorio</a>
+                </div>
+
+            </div>
+        </nav>
+
+
+        <div class="content"  ng-controller="proyectoController as proyectos">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title">Proyectos</h4>
+                                <!-- <p class="category">de desarrollo software MPDL</p> -->
+                            </div>
+                            <div class="content">
+                                <div id="chartPreferences" class="ct-chart ct-perfect-fourth">
+																<table class="table table-hover table-striped">
+																	<thead><tr><th>Aplicacion</th><th>Versiones activas</th><th>Todas las versiones</th></tr></thead>
+																	<tbody>
+																		<tr ng-repeat="proyecto in proyectos.listaProyectos.proyectos">
+																			<td>{{proyecto.nombre}}</td>
+																			<td>
+																				<button class="btn btn-info btn-fill" ng-click="proyectos.getVersionesProyectoActivas(proyecto._id)">Activas.</button>
+																			</td>
+																			<td>
+																				<button class="btn btn-success btn-fill" ng-click="proyectos.getVersionesProyecto(proyecto._id,proyectos.versionPage)">Todas.</button>
+																	    </td>
+																		</tr>
+																	</tbody>
+															</table>
+																	    <li class="animate-repeat" ng-if="proyectos.listaProyectos.proyectos === 0">
+																	      <strong>No hay proyectos...</strong>
+																	    </li>
+																	  </ul>
+																</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="card" >
+                            <div class="header">
+                                <h4 class="title">Versión</h4>
+																	<div class="legend pull-right">
+																			<i class="fa fa-circle text-success"></i> Activa
+																			<i class="fa fa-circle text-danger"></i> Cerrada
+																			<i class="fa fa-circle text-primary"></i> En preparación
+																	</div>
+                            </div>
+                            <div class="content">
+                                <div id="chartHours" class="ct-chart">
+																	<table class="table table-hover table-striped">
+																		<thead><tr><th>Nº de Version</th><th>Estado</th><th>Descripción</th><th>ModLog</th><th>Edit</th></tr></thead>
+																			<tbody>
+																				<tr ng-repeat="version in proyectos.listaVersionesProyecto.versions">
+																					<td>{{version.numVersion}}</td>
+																					<td>
+																						<div class="activa" ng-show="version.estado == '58b010fc66c2123fc13cc95b'">
+																							  <i class="fa fa-circle text-success"></i> Activa
+																						</div>
+																						<div class="pendiente" ng-show="version.estado == '58b0110866c2123fc13cc95c'">
+																							  <i class="fa fa-circle text-primary"></i> En preparación
+																						</div>
+																						<div class="cerrado" ng-show="version.estado == '58b0111066c2123fc13cc95d'">
+																							  <i class="fa fa-circle text-danger"></i> Cerrada
+																						</div>
+																							 <!-- {{version.estado}} -->
+																					</td>
+																					<td>
+																						 {{version.descripcion}}
+																					</td>
+																					<td>
+																						<button class="btn btn-info btn-fill" ng-click="proyectos.getModLogVersion(version._id)">Ver.</button>
+																					</td>
+																					<td>
+																						<a href="#" ng-click="proyectos.getVersionEdit(version._id)"><i class="pe-7s-edit" ></i></a>
+																					</td>
+																				</tr>
+																				<tr>
+																					<td>
+																						<button class="btn btn-warning mi-imagen-abajo-izq" ng-show="proyectos.versionPage>1" ng-click="proyectos.getVersionesProyecto(proyectos.proyectoSeleccionadoId,proyectos.versionPage-1)">Anterior</button>
+																						<button class="btn btn-warning mi-imagen-abajo-izq" ng-show="proyectos.listaVersionesProyecto.showMore" ng-click="proyectos.getVersionesProyecto(proyectos.proyectoSeleccionadoId,proyectos.versionPage+1)">Siguiente</button>
+																						<button class="btn btn-success mi-imagen-abajo-derecha" ng-show="proyectos.proyectoSeleccionado" ng-click="proyectos.nuevaVersion()">Crear nueva versión.</button>
+																					</td>
+																				</tr>
+																			</tbody>
+																		</table>
+																</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" ng-show="proyectos.showModLog">
+                    <div class="col-md-12">
+                        <div class="card"  >
+                            <div class="header">
+                                <h4 class="title">Log de Modificaciones</h4>
+																<div class="legend pull-right">
+																		<i class="fa fa-circle text-primary"></i> Pendiente
+																		<i class="fa fa-circle text-warning"></i> En proceso
+																		<i class="fa fa-circle text-success"></i> Finalizado
+																</div>
+                            </div>
+                            <div class="content">
+                                <div id="chartActivity" class="ct-chart">
+																	<ul class="example-animate-container">
+																	    <li class="animate-repeat" ng-repeat="modLog in proyectos.listaModLogVersiones.modlogs">
+																	     {{modLog.nombre}}.
+																	    </li>
+																	    <li class="animate-repeat" ng-if="proyectos.listaModLogVersiones.modlogs === 0">
+																	      <strong>No hay proyectos...</strong>
+																	    </li>
+																	  </ul>
+																</div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!--modlogs-->
+
+                <div class="row" ng-show="proyectos.showEditVersion">
+                 <div class="col-md-12">
+ 									<div class="card">
+                   <div class="header">
+                    <h4 class="title">Editar Version</h4>
+                   </div>
+                   <div class="content">
+                    <form>
+
+
+							<div class="row" >
+											<div class="col-md-4">
+															<div class="form-group">
+																			<label>Proyecto</label>
+																			<input ng-model="proyectos.editVersion.proyecto.nombre" type="text" class="form-control" placeholder="Proyecto">
+							        </div>
+											</div>
+											<div class="col-md-4">
+															<div class="form-group">
+																			<label>Version</label>
+																			<input ng-model="proyectos.editVersion.numero" type="text" class="form-control" placeholder="Version">
+															</div>
+											</div>
+											<div class="col-md-4">
+															<div class="form-group">
+																			<label>Estado</label>
+																			<select ng-model="proyectos.editVersion.estado" class="form-control" placeholder="Estado">
+																				<option  value='A' ng-selected='proyectos.editVersion.estadoShowA'>Activa</option>
+																				<option  value='P' ng-selected='proyectos.editVersion.estadoShowP'>En preparacion</option>
+																				<option  value='F' ng-selected='proyectos.editVersion.estadoShowF'>Cerrada</option>
+
+																			</select>
+															</div>
+											</div>
+											<div class="col-md-12">
+															<div class="form-group">
+																			<label>Descripcion</label>
+																			<textarea ng-model="proyectos.editVersion.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion de la version">
+																			</textarea>
+															</div>
+											</div>
+							</div>
+    					<button ng-click="proyectos.actualizarVersion(proyectos.editVersion._id)" type="submit" class="btn btn-info btn-fill pull-right">Actualizar</button>
+							<div class="clearfix"></div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div> <!--EditVer-->
+
+			<div class="row" ng-show="proyectos.showCreaVersion">
+			 <div class="col-md-12">
+				<div class="card">
+				 <div class="header">
+					<h4 class="title">Crear Version</h4>
+				 </div>
+				 <div class="content">
+					<form>
+
+
+		<div class="row" >
+						<div class="col-md-4">
+										<div class="form-group">
+														<label>Proyecto</label>
+														<input readonly ng-model="proyectos.proyectoSeleccionadoId" type="text" class="form-control" placeholder="Proyecto">
+						</div>
+						</div>
+						<div class="col-md-4">
+										<div class="form-group">
+														<label>Version</label>
+														<input ng-model="proyectos.creaVersion.numero" type="text" class="form-control" placeholder="Version">
+										</div>
+						</div>
+						<div class="col-md-4">
+										<div class="form-group">
+														<label>Estado</label>
+														<select ng-model="proyectos.creaVersion.estado" class="form-control" placeholder="Estado">
+															<option  value='A' ng-selected='proyectos.creaVersion.estadoShowA'>Activa</option>
+															<option  value='P' ng-selected='proyectos.creaVersion.estadoShowP'>En preparacion</option>
+															<option  value='F' ng-selected='proyectos.creaVersion.estadoShowF'>Cerrada</option>
+
+														</select>
+										</div>
+						</div>
+						<div class="col-md-12">
+										<div class="form-group">
+														<label>Descripcion</label>
+														<textarea ng-model="proyectos.creaVersion.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion de la version">
+														</textarea>
+										</div>
+						</div>
+		</div>
+		<button ng-click="proyectos.creaVersion(proyectos.creaVersion._id)" type="submit" class="btn btn-info btn-fill pull-right">Crear</button>
+		<div class="clearfix"></div>
+		</form>
+	</div>
+</div>
+</div>
+</div> <!--creaver-->
+
+
+
+            </div>
+        </div>
+
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul>
+                        <li>
+                            <a href="#">
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Company
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Portfolio
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                               Blog
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <p class="copyright pull-right">
+                    &copy; 2017 , versionLogs de aplicaciones MPDL
+                </p>
+            </div>
+        </footer>
+
+    </div>
+</div>
+
+
+</body>
+
+	<!--Angular Files -->
+	<script src="src/lib/angular.js" type="text/javascript"></script>
+	<script src="src/lib/angular-ui-router.js" type="text/javascript"></script>
+	<!--Angular Modulos -->
+	<script src="src/modules/versionLog.module.js" type="text/javascript"></script>
+	<!--Angular Controladores y rutas -->
+	<script src="src/controllers/proyectos.controller.js" type="text/javascript"></script>
+	<script src="src/routes/versionLog.routes.js" type="text/javascript"></script>
+  <!--   Core JS Files   -->
+  <script src="assets/js/jquery-1.10.2.js" type="text/javascript"></script>
+	<script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<!--  Checkbox, Radio & Switch Plugins -->
+	<script src="assets/js/bootstrap-checkbox-radio-switch.js"></script>
+	<!--  Charts Plugin -->
+	<script src="assets/js/chartist.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="assets/js/bootstrap-notify.js"></script>
+  <!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
+	<script src="assets/js/light-bootstrap-dashboard.js"></script>
+
+
+
+</html>

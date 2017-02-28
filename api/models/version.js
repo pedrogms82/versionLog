@@ -6,7 +6,7 @@ var Schema = mongoose.Schema;
 var VersionSchema = Schema ({
     numero: String,
     descripcion: String,
-    estado: String, //Schema
+    estado: { type: Schema.ObjectId , ref: 'Estado'},
     proyecto: { type: Schema.ObjectId , ref: 'Proyecto'}
 });
 

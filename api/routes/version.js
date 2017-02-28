@@ -10,7 +10,8 @@ var md_auth = require('../middlewares/authenticated');
 //Creamos las Rutas
 api.get('/version/:id', md_auth.ensureAuth, VersionController.getVersion);
 api.post('/version', md_auth.ensureAuth, VersionController.saveVersion);
-api.post('/versiones/:proyecto?', md_auth.ensureAuth, VersionController.getVersions);
+api.post('/versiones/:proyecto?/:page?', md_auth.ensureAuth, VersionController.getVersions);
+api.post('/versiones-activas/:proyecto?/:page?', md_auth.ensureAuth, VersionController.getVersionsActive);
 api.put('/version/:id', md_auth.ensureAuth, VersionController.updateVersion);
 api.delete('/version/:id', md_auth.ensureAuth, VersionController.deleteVersion);
 // api.post('/upload-image-album/:id', [md_auth.ensureAuth, md_upload], AlbumController.uploadImage);

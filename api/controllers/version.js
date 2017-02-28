@@ -11,8 +11,7 @@ var ModLog = require('../models/modlog');
 //Ver verson
 function getVersion(req, res) {
   var versionId = req.params.id;
-
-  Version.findById(versionId).populate({path: 'proyecto'}).exec((err, version) => {
+  Version.findById(versionId).populate([{path: 'proyecto'},{path: 'estado'}]).exec((err, version) => {
     if(err) res.status(500).send({message: 'Error en petición version'});
     else{
       if(!version) res.status(404).send({message: 'No existe version'});
@@ -44,19 +43,46 @@ function saveVersion(req, res){
 function getVersions(req, res){
 //  var params = req.body;
   var proyectoId = req.params.proyecto;
+  if(req.params.page) var page = req.params.page;
+  else var page = 1;
+  var itemPerPage = 6;
+
 
   if(!proyectoId){
-    var find = Version.find({}).sort('numero');
+    var find = Version.find({}).sort([['numero', 'descending']]);
   }
   else{
-    var find = Version.find({proyecto: proyectoId}).sort('numero');
+    var find = Version.find({proyecto: proyectoId}).sort([['numero', 'descending']]);
+
+  }
+
+find.populate({path: 'proyecto'}).paginate(page, itemPerPage).exec((err, versions) =>{
+//find.populate({path: 'proyecto'}).paginate({}, { page: 3, limit: 2 }).exec((err, versions) =>{
+  if(err) res.status(500).send({message: 'Error al Servidor - getVersion'});
+  else{
+    //console.log(versions);
+    if (!versions) res.status(404).send({message: 'No se encuentran versiones'});
+      else  res.status(200).send({versions: versions});
+  }
+});
+}
+function getVersionsActive(req, res){
+  var params = req.body;// ObjectId("58b010fc66c2123fc13cc95b")
+  var proyectoId = req.params.proyecto;
+  //console.log(proyectoId);
+  if(!proyectoId){
+    var find = Version.find({estado: '58b010fc66c2123fc13cc95b'}).sort('numero');
+  }
+  else{
+    var find = Version.find({proyecto: proyectoId, estado: ['58b010fc66c2123fc13cc95b','58b0110866c2123fc13cc95c']}).sort('numero');
+
   }
 
 find.populate({path: 'proyecto'}).exec((err, versions) =>{
-  if(err) res.status(500).send({message: 'Error al Servidor - getVersion'});
+  if(err) res.status(500).send({message: 'Error al Servidor - getVersionsActive =>' + proyectoId});
   else{
-    if (!versions) res.status(404).send({message: 'No se encuentran albums'});
-      else  res.status(200).send({version: versions});
+    if (!versions) res.status(404).send({message: 'No se encuentran versiones activas'});
+      else  res.status(200).send({versions: versions});
   }
 });
 }
@@ -64,8 +90,16 @@ find.populate({path: 'proyecto'}).exec((err, versions) =>{
 function updateVersion(req, res) {
   var versionId = req.params.id;
   var update = req.body;
+  // var update = "{";
+  // if (req.body.numero) var numero =  req.body.numero; update = update + 'numero:' + "'"+  numero + "',";
+  //   if (req.body.descripcion) var descripcion =  req.body.descripcion; update = update + 'descripcion:' + "'" + descripcion + "',";
+  //     //if (req.body.estado) var estado =  'ObjectId("' + req.body.estado +  '")'; update = update + 'estado:' + "'" + estado;
+  //     if (req.body.estado) var estado =  req.body.estado; update = update + 'estado:' + "'" + estado;
+  // update = update + "'}";
+//  console.log(update.estado);
+  // //console.log(estado);
 
-//  console.log(update);console.log(req.body);console.log(req.params);
+//  //console.log(update);//console.log(req.body);//console.log(req.params);
 
   Version.findByIdAndUpdate(versionId, update, (err, versionUpdated) =>{
     if(err) res.status(500).send({message: 'Error al Servidor - versionUpdate'});
@@ -101,5 +135,6 @@ module.exports = {
   getVersions,
   saveVersion,
   updateVersion,
-  deleteVersion
+  deleteVersion,
+  getVersionsActive
 }

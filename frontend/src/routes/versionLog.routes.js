@@ -2,11 +2,12 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('versionLog').
-config(RoutesConfig);
+angular.module('versionLog')
+.config(RoutesConfig);
 
 RoutesConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 function RoutesConfig($stateProvider, $urlRouterProvider) {
+
   $urlRouterProvider.otherwise('/');
 
   $stateProvider

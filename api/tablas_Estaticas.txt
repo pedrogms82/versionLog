@@ -30,3 +30,25 @@
         "tipo" : "P",
         "nombre" : "Proyectos"
 }
+
+
+db.versions.insert({
+proyecto: ObjectId("58b00d422ceb0b1e94da2b56"),
+descripcion : "version 2.3.0 de ERP de MPDL:  Contabilidad - Proyectos - Nominas",
+numero: "20300"
+})
+db.versions.insert({
+proyecto: ObjectId("58b00d422ceb0b1e94da2b56"),
+descripcion : "version 2.1.5 de ERP de MPDL:  Contabilidad - Proyectos - Nominas",
+numero: "20105"
+})
+db.versions.insert({
+proyecto: ObjectId("58b00d422ceb0b1e94da2b56"),
+descripcion : "version 2.1.0 de ERP de MPDL:  Contabilidad - Proyectos - Nominas",
+numero: "20100"
+})
+db.versions.insert({
+proyecto: ObjectId("58b00d422ceb0b1e94da2b56"),
+descripcion : "version 2.0.0 de ERP de MPDL:  Contabilidad - Proyectos - Nominas",
+numero: "20000"
+})

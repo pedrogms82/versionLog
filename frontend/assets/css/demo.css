@@ -44,18 +44,37 @@
 .places-buttons .btn{
     margin-bottom: 30px
 }
-.sidebar .nav > li.active-pro{
+.sidebar .nav  > li.active-pro{
     position: absolute;
     width: 100%;
     bottom: 10px;
 }
-.sidebar .nav > li.active-pro a{
+.sidebar .nav  > li.active-pro a{
     background: rgba(255, 255, 255, 0.14);
     opacity: 1;
     color: #FFFFFF;
 }
+.button-pro{
+list-style: none;
 
-.table-upgrade td:nth-child(2),
-.table-upgrade td:nth-child(3){
+}
+.button-pro a{
+    background: rgba(255, 255, 255, 5);
+    opacity: 1;
+    color: #966ad7;
+}
+.button-pro p {
+    margin: 0;
+    line-height: 30px;
+    font-size: 25px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.button-pro i {
+    font-size: 45px;
+    float: left;
+    margin-right: 25px;
+    line-height: 30px;
+    width: 30px;
     text-align: center;
 }

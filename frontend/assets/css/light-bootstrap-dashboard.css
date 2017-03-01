@@ -1831,6 +1831,152 @@ body > .navbar-collapse[data-color="purple"]:after {
   overflow: visible;
 }
 
+.card-nh {
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(63, 63, 68, 0.1);
+  background-color: #FFFFFF;
+  margin-bottom: 30px;
+}
+.card-nh .image {
+  width: 100%;
+  overflow: hidden;
+  height: 260px;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+.card-nh .image img {
+  width: 100%;
+}
+.card-nh .filter {
+  position: absolute;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.68);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.card-nh .filter .btn {
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.card-nh:hover .filter {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.card-nh .btn-hover {
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+.card-nh:hover .btn-hover {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.card-nh .content {
+  padding: 15px 15px 10px 15px;
+}
+.card-nh .header {
+  padding: 15px 15px 0;
+}
+.card-nh .category,
+.card-nh label {
+  font-size: 14px;
+  font-weight: 400;
+  color: #9A9A9A;
+  margin-bottom: 0px;
+}
+.card-nh .category i,
+.card-nh label i {
+  font-size: 16px;
+}
+.card-nh label {
+  font-size: 12px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+.card-nh .title {
+  margin: 0;
+  color: #333333;
+  font-weight: 300;
+}
+.card-nh .avatar {
+  width: 30px;
+  height: 30px;
+  overflow: hidden;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.card-nh .description {
+  font-size: 14px;
+  color: #333;
+}
+.card-nh .footer {
+  padding: 0;
+  background-color: transparent;
+  line-height: 30px;
+}
+.card-nh .footer .legend {
+  padding: 5px 0;
+}
+.card-nh .footer hr {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.card-nh .stats {
+  color: #a9a9a9;
+}
+.card-nh .footer div {
+  display: inline-block;
+}
+.card-nh .author {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.card-nh .author i {
+  font-size: 14px;
+}
+.card-nh h6 {
+  font-size: 12px;
+  margin: 0;
+}
+.card-nh.card-nh-separator:after {
+  height: 100%;
+  right: -15px;
+  top: 0;
+  width: 1px;
+  background-color: #DDDDDD;
+  content: "";
+  position: absolute;
+}
+.card-nh .ct-chart {
+  margin: 30px 0 30px;
+  height: 245px;
+}
+.card-nh .table tbody td:first-child,
+.card-nh .table thead th:first-child {
+  padding-left: 15px;
+}
+.card-nh .table tbody td:last-child,
+.card-nh .table thead th:last-child {
+  padding-right: 15px;
+}
+.card-nh .alert {
+  border-radius: 4px;
+  position: relative;
+}
+.card-nh .alert.alert-with-icon {
+  padding-left: 65px;
+}
 .card {
   border-radius: 4px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(63, 63, 68, 0.1);
@@ -3449,4 +3595,10 @@ body > .navbar-collapse[data-color="purple"]:after {
     position:absolute;
     bottom: 8%;
     left: 20%;
+}
+.modlog{
+  min-height: 500px;
+}
+.diezpp{
+  width: 10%;
 }

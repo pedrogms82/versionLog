@@ -13,7 +13,7 @@ var Modulo = require('../models/modulo');
 function getModLog(req, res) {
   var modLogId = req.params.id;
 
-  ModLog.findById(modLogId).populate({  path: 'version', populate: { path: 'proyecto', model: 'Proyecto'}}).populate({path: 'estado'}).exec((err, modlog)=>{
+  ModLog.findById(modLogId).populate([{path: 'modulo'},{path: 'estado'},{path: 'version', populate: { path: 'proyecto', model: 'Proyecto'}}]).exec((err, modlog)=>{
     if(err) res.status(500).send({message: 'Error en el server'});
     else{
       if(!modlog) res.status(404).send({message: 'No existe'});
@@ -25,7 +25,10 @@ function saveModLog(req, res){
   var modlog = new ModLog();
   var params = req.body;
 
-  modlog.numero = params.number;
+  console.log("Parametros del ModLog");
+  console.log(params);
+
+  modlog.numero = params.numero;
   modlog.nombre = params.nombre;
   modlog.descripcion = params.descripcion;
 //  modlog.campos = 'null';
@@ -36,6 +39,7 @@ function saveModLog(req, res){
   modlog.save((err, modLogStored) => {
     if(err) res.status(500).send({message: 'Error en el server'});
     else{
+      console.log(modLogStored);
       if(!modLogStored) res.status(404).send({message: 'Error guardar Log'});
       else res.status(200).send({modlog: modLogStored});
     }
@@ -43,17 +47,23 @@ function saveModLog(req, res){
 }
 function getModLogs(req, res){
   var versionId = req.params.version;
+  if(req.params.page) var page = req.params.page;
+  else var page = 1;
+  var itemPerPage = 9;
 
   if(!versionId) var find = ModLog.find({}).sort('numero');
   else var find = ModLog.find({version: versionId}).sort('numero');
 
-  find.populate({
-    path: 'version',
+  find.populate([
+    {path: 'estado'},
+    {path: 'modulo'},
+    {path: 'version',
     populate: {
       path: 'proyecto',
-      model: 'Proyecto'
-    }
-  }).exec((err, modlogs)=>{
+      model: 'Proyecto'}
+    }]
+  ).paginate(page, itemPerPage)
+  .exec((err, modlogs)=>{
     if(err) res.status(404).send({message: 'Error server'});
     else {
       if(!modlogs) res.status(404).send({message: 'No hay modlogs'});

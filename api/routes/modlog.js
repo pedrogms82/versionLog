@@ -10,7 +10,7 @@ var md_auth = require('../middlewares/authenticated');
 //Creamos las Rutas
 api.get('/modlog/:id', md_auth.ensureAuth, ModLogController.getModLog);
 api.post('/modlog', md_auth.ensureAuth, ModLogController.saveModLog);
-api.post('/modlogs/:version?', md_auth.ensureAuth, ModLogController.getModLogs);
+api.post('/modlogs/:version?/:page?', md_auth.ensureAuth, ModLogController.getModLogs);
 api.put('/modlog/:id', md_auth.ensureAuth, ModLogController.updateModLog);
 api.delete('/modlog/:id', md_auth.ensureAuth, ModLogController.deleteModLog);
 // api.post('/uploadfile/:id', [md_auth.ensureAuth, md_upload], ModLogController.uploadFile);

@@ -1,4 +1,4 @@
-'use strict' //Controlador de albumas
+'use strict' //Controlador de version
 //Cargamos filesystem y path
 var fs = require('fs');
 var path = require('path');
@@ -8,7 +8,7 @@ var Proyecto = require('../models/proyecto');
 var Version = require('../models/version');
 var ModLog = require('../models/modlog');
 //Metodos
-//Ver verson
+//Ver version
 function getVersion(req, res) {
   var versionId = req.params.id;
   Version.findById(versionId).populate([{path: 'proyecto'},{path: 'estado'}]).exec((err, version) => {
@@ -19,16 +19,15 @@ function getVersion(req, res) {
     }
   });
 }
-//Guardar Album
+//Guardar version
 function saveVersion(req, res){
 
   var version = new Version();
   var params = req.body;
 
-  console.log(params);
   version.numero = params.numero;
   version.descripcion = params.descripcion;
-  version.estado =null;
+  version.estado =params.estado;
   version.proyecto = params.proyecto;
 
   version.save((err, versionStored)=>{
@@ -47,13 +46,11 @@ function getVersions(req, res){
   else var page = 1;
   var itemPerPage = 6;
 
-
   if(!proyectoId){
     var find = Version.find({}).sort([['numero', 'descending']]);
   }
   else{
     var find = Version.find({proyecto: proyectoId}).sort([['numero', 'descending']]);
-
   }
 
 find.populate({path: 'proyecto'}).paginate(page, itemPerPage).exec((err, versions) =>{
@@ -71,7 +68,7 @@ function getVersionsActive(req, res){
   var proyectoId = req.params.proyecto;
   //console.log(proyectoId);
   if(!proyectoId){
-    var find = Version.find({estado: '58b010fc66c2123fc13cc95b'}).sort('numero');
+    var find = Version.find({estado: ['58b010fc66c2123fc13cc95b','58b0110866c2123fc13cc95c']}).sort('numero');
   }
   else{
     var find = Version.find({proyecto: proyectoId, estado: ['58b010fc66c2123fc13cc95b','58b0110866c2123fc13cc95c']}).sort('numero');
@@ -86,21 +83,10 @@ find.populate({path: 'proyecto'}).exec((err, versions) =>{
   }
 });
 }
-//Actualizar album
+//Actualizar version
 function updateVersion(req, res) {
   var versionId = req.params.id;
   var update = req.body;
-  // var update = "{";
-  // if (req.body.numero) var numero =  req.body.numero; update = update + 'numero:' + "'"+  numero + "',";
-  //   if (req.body.descripcion) var descripcion =  req.body.descripcion; update = update + 'descripcion:' + "'" + descripcion + "',";
-  //     //if (req.body.estado) var estado =  'ObjectId("' + req.body.estado +  '")'; update = update + 'estado:' + "'" + estado;
-  //     if (req.body.estado) var estado =  req.body.estado; update = update + 'estado:' + "'" + estado;
-  // update = update + "'}";
-//  console.log(update.estado);
-  // //console.log(estado);
-
-//  //console.log(update);//console.log(req.body);//console.log(req.params);
-
   Version.findByIdAndUpdate(versionId, update, (err, versionUpdated) =>{
     if(err) res.status(500).send({message: 'Error al Servidor - versionUpdate'});
     else{
@@ -109,10 +95,10 @@ function updateVersion(req, res) {
     }
   });
 }
-//Borrar Album
+//Borrar version
 function deleteVersion(req, res){
   var versionId = req.params.id;
-
+  console.log("Version a eliminar -> ");console.log(versionId);
   Version.findByIdAndRemove(versionId, (err, versionRemoved)=>{
     if (err) res.status(500).send({message: 'Error al eliminar version'});
     else {
@@ -121,13 +107,13 @@ function deleteVersion(req, res){
         ModLog.find({album: versionRemoved._id}).remove( (err, modLogRemoved)=>{
           if (err) res.status(500).send({message: 'Error al eliminar modlog'});
           else {
-            if(!modLogRemoved) res.status(404).send({message: "No se ha eliminado songs"});
+            if(!modLogRemoved) res.status(404).send({message: "No se ha eliminado modlog"});
             else res.status(200).send({message: "Eliminado",version: versionRemoved, modLog: modLogRemoved});
             }
           });
-        }//else album
-    }//else album
-  });//callback album
+        }//else version
+    }//else version
+  });//callback version
 }
 //Exportamos modulos
 module.exports = {

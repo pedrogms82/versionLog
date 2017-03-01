@@ -3,10 +3,7 @@
 
 angular.module('versionLog')
 .constant('apiUrl', "http://localhost:3977/api/")
-.controller('proyectoController',proyectoController)
-.service('modLogService',modLogService)
-.service('versionService',versionService)
-.service('proyectoService',proyectoService);
+.controller('proyectoController',proyectoController);
 
 
 proyectoController.$inject = ['proyectoService','versionService' ,'modLogService'];
@@ -17,8 +14,16 @@ function proyectoController(proyectoService, versionService, modLogService) {
   {tipo:'A', _id:'58b010fc66c2123fc13cc95b'},
   {tipo:'P', _id:'58b0110866c2123fc13cc95c'},
   {tipo:'F', _id:'58b0111066c2123fc13cc95d'}
-];
+  ];
+  Controller.Modulos = [
+  {tipo:'C', _id:'58b015b866c2123fc13cc95e'},
+  {tipo:'N', _id:'58b015c066c2123fc13cc95f'},
+  {tipo:'P', _id:'58b015cb66c2123fc13cc960'},
+  {tipo:'O', _id:'58b015cb66c2123fc13cc961'}
+  ];
+
   Controller.proyectoSeleccionado = false;
+  Controller.showProVer = true;
   var promiseProyectos = proyectoService.getProyectos();
   promiseProyectos.then(
   function success(result){
@@ -29,6 +34,8 @@ function proyectoController(proyectoService, versionService, modLogService) {
   });
 
   Controller.getVersionEdit = function (versionId){
+
+
 
     var promiseVersiones = versionService.getVersion(versionId);
     promiseVersiones.then(
@@ -41,6 +48,7 @@ function proyectoController(proyectoService, versionService, modLogService) {
     Controller.showEditVersion = true;
     Controller.showCreaVersion = false;
     Controller.showModLog = false;
+    Controller.showProVer = false;
     },
     function error(){
       console.log("Error en la segunda promesa");
@@ -51,6 +59,7 @@ function proyectoController(proyectoService, versionService, modLogService) {
     if (Controller.editVersion.estado==='A') Controller.editVersion.estado= Controller.Estados[0]._id;
     else if (Controller.editVersion.estado==='P') Controller.editVersion.estado= Controller.Estados[1]._id;
     else if (Controller.editVersion.estado==='F') Controller.editVersion.estado= Controller.Estados[2]._id;
+    else Controller.editVersion.estado= Controller.Estados[1]._id;
     console.log("estado");
     console.log(Controller.editVersion.estado);
   var versionData = {
@@ -66,25 +75,160 @@ function proyectoController(proyectoService, versionService, modLogService) {
       function success(result){
         Controller.updateVersion = result;
         console.log(Controller.updateVersion);
+        Controller.showEditVersion = false;
+        Controller.showProVer = true;
       },
       function error(){
         console.log("Error en la segunda promesa");
       });
 
 }
+Controller.nuevoModLog = function () {
+  Controller.showModLog = false;
+  Controller.showcreaModLog = true;
+  Controller.creaModLog.modulo = 'O';
+  Controller.creaModLog.estado = 'A';
+}
+Controller.creaModLog = function () {
+  console.log(Controller.creaModLog.estado);
+  if (Controller.creaModLog.estado==='A') Controller.creaModLog.estado= Controller.Estados[0]._id;
+  else if (Controller.creaModLog.estado==='P') Controller.creaModLog.estado= Controller.Estados[1]._id;
+  else if (Controller.creaModLog.estado==='F') Controller.creaModLog.estado= Controller.Estados[2]._id;
+  else Controller.creaModLog.estado = Controller.Estados[0]._id;
+
+
+  if (Controller.creaModLog.modulo==='C') Controller.creaModLog.modulo= Controller.Modulos[0]._id;
+  else if (Controller.creaModLog.modulo==='N') Controller.creaModLog.modulo= Controller.Modulos[1]._id;
+  else if (Controller.creaModLog.modulo==='P') Controller.creaModLog.modulo= Controller.Modulos[2]._id;
+  else if (Controller.creaModLog.modulo==='O') Controller.creaModLog.modulo= Controller.Modulos[3]._id;
+  else Controller.creaModLog.modulo = Controller.Modulos[3]._id;
+
+  console.log("estado");
+  console.log(Controller.creaModLog.estado);
+  console.log("modulo");
+  console.log(Controller.creaModLog.modulo);
+var modLogData = {
+    numero: Controller.creaModLog.numero,
+    nombre: Controller.creaModLog.nombre,
+    descripcion: Controller.creaModLog.descripcion,
+    estado: Controller.creaModLog.estado,
+    version: Controller.versionSeleccionadaId,
+    modulo: Controller.creaModLog.modulo,
+    };
+    console.log("modLogData");
+    console.log(modLogData);
+    var promiseVersiones = modLogService.crearModLog(modLogData);
+    promiseVersiones.then(
+    function success(result){
+      Controller.updateModLog = result;
+      console.log(Controller.updateModLog);
+      Controller.getModLogVersion(Controller.versionSeleccionadaId,1);
+    },
+    function error(){
+      console.log("Error en la segunda promesa");
+    });
+}
+Controller.modlogPage = 1;
+Controller.getModLogsVersion = function (versionId,pageCount){
+  console.log(pageCount);
+  if (!pageCount) pageCount = 1;
+  Controller.showProVer = false;
+  Controller.showModLog = true;
+  Controller.showCreaVersion = false;
+  Controller.showEditVersion = false;
+  Controller.showcreaModLog = false;
+  Controller.modlogPage = pageCount;
+  Controller.versionSeleccionadaId = versionId;
+
+  var promiseModLog = modLogService.getModLogs(versionId, pageCount);
+  promiseModLog.then(
+  function success(result){
+  Controller.listaModLogVersiones = result;
+  Controller.listaModLogVersiones.showMore = false;
+  if (Controller.listaModLogVersiones.modlogs.length === 9) Controller.listaModLogVersiones.showMore = true;
+  console.log("listaModLogVersiones");
+  console.log(Controller.listaModLogVersiones);
+  },
+  function error(){
+    console.log("Error en la segunda promesa");
+  });
+};
+Controller.getModLogEdit = function (modLogId){
+
+  Controller.showEditModLog = true;
+  Controller.showCreaModLog = false;
+  Controller.showModLog = false;
+
+  var promiseModLog = modLogService.getModLog(modLogId);
+  promiseModLog.then(
+  function success(result){
+  Controller.editModLog = result.modlog;
+  console.log( Controller.editModLog);
+  if (Controller.editModLog.estado.tipo===Controller.Estados[0].tipo) Controller.editModLog.estadoShowA = true;
+  else if (Controller.editModLog.estado.tipo===Controller.Estados[1].tipo) Controller.editModLog.estadoShowP = true;
+  else if (Controller.editModLog.estado.tipo===Controller.Estados[2].tipo) Controller.editModLog.estadoShowF = true;
+  },
+  function error(){
+    console.log("Error en la segunda promesa");
+  });
+};
+Controller.actualizarModLog = function (modLogId) {
+  console.log(Controller.editModLog);
+  if (Controller.editModLog.estado==='A') Controller.editModLog.estado= Controller.Estados[0]._id;
+  else if (Controller.editModLog.estado==='P') Controller.editModLog.estado= Controller.Estados[1]._id;
+  else if (Controller.editModLog.estado==='F') Controller.editModLog.estado= Controller.Estados[2]._id;
+  else Controller.editModLog.estado = Controller.Estados[1]._id;
+  console.log("estado");
+  console.log(Controller.editModLog.estado);
+
+
+  if (Controller.editModLog.modulo==='C') Controller.editModLog.modulo= Controller.Modulos[0]._id;
+  else if (Controller.editModLog.modulo==='N') Controller.editModLog.modulo= Controller.Modulos[1]._id;
+  else if (Controller.editModLog.modulo==='P') Controller.editModLog.modulo= Controller.Modulos[2]._id;
+  else if (Controller.editModLog.modulo==='O') Controller.editModLog.modulo= Controller.Modulos[3]._id;
+  else Controller.editModLog.modulo = Controller.Modulos[3]._id;
+  var modLogData = {
+      numero: Controller.editModLog.numero,
+      nombre: Controller.editModLog.nombre,
+      descripcion: Controller.editModLog.descripcion,
+      estado: Controller.editModLog.estado,
+      version: Controller.versionSeleccionadaId,
+      modulo: Controller.editModLog.modulo,
+      };
+
+    console.log("editModLog");
+    console.log(modLogData);
+    var promiseVersiones = modLogService.actualizarModLog(modLogId,modLogData);
+    promiseVersiones.then(
+    function success(result){
+      Controller.updateModLog = result;
+      console.log(Controller.updateModLog);
+        Controller.showEditModLog = false;
+
+        Controller.getModLogsVersion(Controller.versionSeleccionadaId,Controller.modlogPage);
+    },
+    function error(){
+      console.log("Error en la segunda promesa");
+    });
+
+}
 Controller.nuevaVersion = function () {
   Controller.showModLog = false;
   Controller.showCreaVersion = true;
   Controller.showEditVersion = false;
+  Controller.creaVersion.estado = 'P';
+  Controller.showProVer = false;
 }
 Controller.creaVersion = function () {
   Controller.showModLog = false;
-  Controller.showCreaVersion = true;
+  Controller.showCreaVersion = false;
   Controller.showEditVersion = false;
+    Controller.showProVer = true;
   console.log(Controller.creaVersion.estado);
   if (Controller.creaVersion.estado==='A') Controller.creaVersion.estado= Controller.Estados[0]._id;
   else if (Controller.creaVersion.estado==='P') Controller.creaVersion.estado= Controller.Estados[1]._id;
   else if (Controller.creaVersion.estado==='F') Controller.creaVersion.estado= Controller.Estados[2]._id;
+  else Controller.creaVersion.estado= Controller.Estados[1]._id;
   console.log("estado");
   console.log(Controller.creaVersion.estado);
 var versionData = {
@@ -100,6 +244,7 @@ var versionData = {
     function success(result){
       Controller.updateVersion = result;
       console.log(Controller.updateVersion);
+      Controller.getVersionesProyecto(Controller.proyectoSeleccionadoId,1);
     },
     function error(){
       console.log("Error en la segunda promesa");
@@ -139,12 +284,28 @@ var versionData = {
       console.log("Error en la segunda promesa");
     });
   };
+  Controller.deleteVersion = function (versionId){
+    var promiseVersiones = versionService.deleteVersion(versionId);
+    Controller.showEditVersion = false;
+    Controller.showProVer = true;
+    promiseVersiones.then(
+    function success(result){
+    Controller.listaVersionesProyecto = result;
+    Controller.getVersionesProyecto(Controller.proyectoSeleccionadoId,1);
+    },
+    function error(){
+      console.log("Error en la segunda promesa");
+    });
+  };
   Controller.getModLogVersion = function (versionId){
-
+    Controller.showProVer = false;
     Controller.showModLog = true;
     Controller.showCreaVersion = false;
     Controller.showEditVersion = false;
-    var promiseModLog = modLogService.getModLog(versionId);
+    Controller.showcreaModLog = false;
+
+    Controller.versionSeleccionadaId = versionId;
+    var promiseModLog = modLogService.getModLogs(versionId);
     promiseModLog.then(
     function success(result){
     Controller.listaModLogVersiones = result;
@@ -155,153 +316,30 @@ var versionData = {
     });
   };
 
+  Controller.backModLogCrear = function (){
+    Controller.showModLog = true;
+    Controller.showcreaModLog = false;
+  };
+  Controller.backVersionCrear = function (){
+    Controller.showProVer = true;
+    Controller.showCreaVersion = false;
+  };
+  Controller.backVersionEdit = function (){
+    Controller.showProVer = true;
+    Controller.showEditVersion = false;
+  };
+  Controller.backModLogVersion = function (){
+    Controller.showProVer = true;
+    Controller.showModLog = false;
+    Controller.showCreaVersion = false;
+    Controller.showEditVersion = false;
+  };
+  Controller.backModLogs = function (){
+    Controller.showModLog = true;
+    Controller.showEditModLog = false;
+  };
+
 
 }//proyectoController
-
-proyectoService.$inject = ['$http','apiUrl'];
-function proyectoService ($http, apiUrl){
-  var Servicio = this;
-  Servicio.getProyectos = function (){
-     return $http({
-            method: "GET",
-            url: (apiUrl+'proyectos'),
-            headers: { 'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI'}
-    }).then(
-      function success(result){
-          // process result and only keep items that match
-          var proyectosEncontrados = result.data;
-          return proyectosEncontrados;
-    },
-      function error(){
-        console.log("Error en la primera promesa");
-    });
-  }
-}// End MenuSearchService
-
-
-versionService.$inject = ['$http','apiUrl'];
-function versionService($http,apiUrl){
-  var Servicio = this;
-  Servicio.getVersion = function (versionId){
-     return $http({
-            method: "GET",
-            url: (apiUrl+'version/'+versionId),
-            headers: { 'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI'}
-    }).then(
-      function success(result){
-          // process result and only keep items that match
-          var versionEncontrados = result.data;
-          console.log(versionEncontrados);
-          return versionEncontrados;
-    },
-      function error(){
-        console.log("Error en la primera promesa");
-    });
-  }
-  Servicio.getVersiones = function (proyectoId,pageCount){
-     return $http({
-            method: "POST",
-            url: (apiUrl+'versiones/'+proyectoId+'/'+pageCount),
-            headers: { 'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI'}
-    }).then(
-      function success(result){
-          // process result and only keep items that match
-          var versionesEncontrados = result.data;
-          console.log(versionesEncontrados);
-          return versionesEncontrados;
-    },
-      function error(){
-        console.log("Error en la primera promesa");
-    });
-  }
-  Servicio.getVersionesActivas = function (proyectoId){
-     return $http({
-            method: "POST",
-            url: (apiUrl+'versiones-activas/'+proyectoId),
-            headers: { 'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI'}
-    }).then(
-      function success(result){
-          // process result and only keep items that match
-          var versionesEncontrados = result.data;
-          return versionesEncontrados;
-    },
-      function error(){
-        console.log("Error en la primera promesa");
-    });
-  }
-
-  Servicio.actualizarVersion =  function (versionId, versionData){
-    console.log(versionData);
-    $http.defaults.headers.common.Authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI';
-    return $http({
-           method: "PUT",
-           url: (apiUrl+'version/'+versionId),
-           //data : "message=" + versionData,
-           data : Object.toparams(versionData),
-           headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
-   }).then(
-     function success(result){
-         // process result and only keep items that match
-         var versionesActualizada = result.data;
-         return versionesActualizada;
-   },
-     function error(){
-       console.log("Error en la primera promesa");
-   });
-   Object.toparams = function ObjecttoParams(obj) {
-       var p = [];
-       for (var key in obj) {
-           p.push(key + '=' + encodeURIComponent(obj[key]));
-       }
-       return p.join('&');
-   };
- }
-   Servicio.crearVersion =  function (versionData){
-     console.log(versionData);
-     $http.defaults.headers.common.Authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI';
-     return $http({
-            method: "POST",
-            url: (apiUrl+'version'),
-            data : Object.toparams(versionData),
-            headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}
-    }).then(
-      function success(result){
-          // process result and only keep items that match
-          var versionesNueva = result.data;
-          return versionesNueva;
-    },
-      function error(){
-        console.log("Error en la primera promesa");
-    });
-  }
-
-  Object.toparams = function ObjecttoParams(obj) {
-      var p = [];
-      for (var key in obj) {
-          p.push(key + '=' + encodeURIComponent(obj[key]));
-      }
-      return p.join('&');
-  };
-}
-
-modLogService.$inject = ['$http','apiUrl'];
-function modLogService($http,apiUrl){
-  var Servicio = this;
-  Servicio.getModLog = function (versionId){
-     return $http({
-            method: "POST",
-            url: (apiUrl+'modlogs/'+versionId),
-            headers: { 'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI'}
-    }).then(
-      function success(result){
-          // process result and only keep items that match
-          var modLogEncontrados = result.data;
-          return modLogEncontrados;
-    },
-      function error(){
-        console.log("Error en la primera promesa");
-    });
-  }
-}
 
 })();

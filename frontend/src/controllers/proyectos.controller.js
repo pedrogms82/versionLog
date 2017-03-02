@@ -19,7 +19,7 @@ function proyectoController(proyectoService, versionService, modLogService) {
   {tipo:'C', _id:'58b015b866c2123fc13cc95e'},
   {tipo:'N', _id:'58b015c066c2123fc13cc95f'},
   {tipo:'P', _id:'58b015cb66c2123fc13cc960'},
-  {tipo:'O', _id:'58b015cb66c2123fc13cc961'}
+  {tipo:'O', _id:'58b7ec717a174fcbcfd4a5b4'}
   ];
 
   Controller.proyectoSeleccionado = false;
@@ -108,7 +108,7 @@ Controller.creaModLog = function () {
   console.log("modulo");
   console.log(Controller.creaModLog.modulo);
 var modLogData = {
-    numero: Controller.creaModLog.numero,
+    ref: Controller.creaModLog.ref, //  numero: 'getNextSequenceValue('+Controller.versionSeleccionadaId+')',
     nombre: Controller.creaModLog.nombre,
     descripcion: Controller.creaModLog.descripcion,
     estado: Controller.creaModLog.estado,
@@ -129,7 +129,7 @@ var modLogData = {
     });
 }
 Controller.modlogPage = 1;
-Controller.getModLogsVersion = function (versionId,pageCount){
+Controller.getModLogsVersion = function (versionId,pageCount,versionName){
   console.log(pageCount);
   if (!pageCount) pageCount = 1;
   Controller.showProVer = false;
@@ -139,6 +139,7 @@ Controller.getModLogsVersion = function (versionId,pageCount){
   Controller.showcreaModLog = false;
   Controller.modlogPage = pageCount;
   Controller.versionSeleccionadaId = versionId;
+  Controller.versionName = versionName;
 
   var promiseModLog = modLogService.getModLogs(versionId, pageCount);
   promiseModLog.then(
@@ -188,7 +189,7 @@ Controller.actualizarModLog = function (modLogId) {
   else if (Controller.editModLog.modulo==='O') Controller.editModLog.modulo= Controller.Modulos[3]._id;
   else Controller.editModLog.modulo = Controller.Modulos[3]._id;
   var modLogData = {
-      numero: Controller.editModLog.numero,
+      ref: Controller.editModLog.ref,
       nombre: Controller.editModLog.nombre,
       descripcion: Controller.editModLog.descripcion,
       estado: Controller.editModLog.estado,
@@ -205,13 +206,26 @@ Controller.actualizarModLog = function (modLogId) {
       console.log(Controller.updateModLog);
         Controller.showEditModLog = false;
 
-        Controller.getModLogsVersion(Controller.versionSeleccionadaId,Controller.modlogPage);
+        Controller.getModLogsVersion(Controller.versionSeleccionadaId,Controller.modlogPage, Controller.versionName);
     },
     function error(){
       console.log("Error en la segunda promesa");
     });
-
 }
+Controller.deleteModLog = function (modLogId){
+  console.log("entro");
+  var promiseModLog = modLogService.deleteModLog(modLogId);
+  Controller.showEditModLog = false;
+  Controller.showModLog = true;
+  promiseModLog.then(
+  function success(result){
+  Controller.listaModLogVersiones = result;
+  Controller.getModLogsVersion(Controller.versionSeleccionadaId,1, Controller.versionName);
+  },
+  function error(){
+    console.log("Error en la segunda promesa");
+  });
+};
 Controller.nuevaVersion = function () {
   Controller.showModLog = false;
   Controller.showCreaVersion = true;

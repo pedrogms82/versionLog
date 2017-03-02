@@ -5,7 +5,7 @@ var app = require('./app.js');
 var port = process.env.PORT || 3977;
 
 
-mongoose.connect('mongodb://localhost:27017/versionLog', (err, res) => {
+mongoose.connect('mongodb://192.168.50.12:27017/versionLog', (err, res) => {
     if(err){
       throw err;
     } else {

@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var ModLogSchema = Schema ({
-    numero: Number,
+    ref: String,
     nombre: String,
     descripcion: String,
   //  campos: Array,

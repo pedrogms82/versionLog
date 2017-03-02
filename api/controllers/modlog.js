@@ -28,7 +28,7 @@ function saveModLog(req, res){
   console.log("Parametros del ModLog");
   console.log(params);
 
-  modlog.numero = params.numero;
+  modlog.ref = params.ref;
   modlog.nombre = params.nombre;
   modlog.descripcion = params.descripcion;
 //  modlog.campos = 'null';
@@ -51,8 +51,8 @@ function getModLogs(req, res){
   else var page = 1;
   var itemPerPage = 9;
 
-  if(!versionId) var find = ModLog.find({}).sort('numero');
-  else var find = ModLog.find({version: versionId}).sort('numero');
+  if(!versionId) var find = ModLog.find({}).sort('ref');
+  else var find = ModLog.find({version: versionId}).sort('ref');
 
   find.populate([
     {path: 'estado'},

@@ -12,16 +12,15 @@ function RoutesConfig($stateProvider, $urlRouterProvider) {
 
   $stateProvider
   .state('home',{
-    url: '/'
-  //  templateUrl: 'src/templates/envio.template.html',
-  //  controller: 'proyectoController as proyectoC'
-
+    url: '/',
+    templateUrl: 'src/templates/versionLog.template.html',
+    controller: 'proyectoController as proyectoC'
+  })
+   .state('bug',{
+     url: '/bug',
+     templateUrl: 'src/templates/bug.template.html',
+     controller: 'bugController as bugC'
   });
-  // .state('contacto',{
-  //   url: '/contacto',
-  //   templateUrl: 'src/templates/contacto.template.html',
-    //controller: 'contactoController as contacto'
- // });
 }
 
 })();

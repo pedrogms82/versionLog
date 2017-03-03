@@ -12,6 +12,7 @@ var userRoutes = require('./routes/user');
 var proyectoRoutes = require('./routes/proyecto');
 var versionRoutes = require('./routes/version');
 var modLogRoutes = require('./routes/modlog');
+var bugRoutes = require('./routes/bug');
 var UserController = require('./controllers/user');
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -33,7 +34,7 @@ app.use((req, res, next)=>{
 // });
 
 //rutas base
-app.use('/api', [userRoutes, proyectoRoutes, versionRoutes, modLogRoutes]);
+app.use('/api', [userRoutes, proyectoRoutes, versionRoutes, modLogRoutes, bugRoutes]);
 
 //Asi seria sin el Router
 // app.post('/signup', UserController.saveUser);

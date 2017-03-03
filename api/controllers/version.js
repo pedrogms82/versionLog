@@ -66,6 +66,9 @@ find.populate({path: 'proyecto'}).paginate(page, itemPerPage).exec((err, version
 function getVersionsActive(req, res){
   var params = req.body;// ObjectId("58b010fc66c2123fc13cc95b")
   var proyectoId = req.params.proyecto;
+  if(req.params.page) var page = req.params.page;
+  else var page = 1;
+  var itemPerPage = 6;
   //console.log(proyectoId);
   if(!proyectoId){
     var find = Version.find({estado: ['58b010fc66c2123fc13cc95b','58b0110866c2123fc13cc95c']}).sort('numero');
@@ -75,7 +78,7 @@ function getVersionsActive(req, res){
 
   }
 
-find.populate({path: 'proyecto'}).exec((err, versions) =>{
+find.populate({path: 'proyecto'}).paginate(page, itemPerPage).exec((err, versions) =>{
   if(err) res.status(500).send({message: 'Error al Servidor - getVersionsActive =>' + proyectoId});
   else{
     if (!versions) res.status(404).send({message: 'No se encuentran versiones activas'});

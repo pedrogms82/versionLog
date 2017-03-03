@@ -1,0 +1,393 @@
+<div class="content">
+    <div class="container-fluid">
+        <div class="row" ng-show="proyectoC.showProVer">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Proyectos</h4>
+                        <!-- <p class="category">de desarrollo software MPDL</p> -->
+                    </div>
+                    <div class="content">
+                        <div id="chartPreferences" class="ct-chart ct-perfect-fourth">
+                        <table class="table table-hover table-striped">
+                          <thead><tr><th>Aplicacion</th><th>Versiones activas</th><th>Todas las versiones</th></tr></thead>
+                          <tbody>
+                            <tr ng-repeat="proyecto in proyectoC.listaProyectos.proyectos">
+                              <td>{{proyecto.nombre}}</td>
+                              <td>
+                                <button class="btn btn-info btn-fill" ng-click="proyectoC.getVersionesProyectoActivas(proyecto._id)">Activas.</button>
+                              </td>
+                              <td>
+                                <button class="btn btn-success btn-fill" ng-click="proyectoC.getVersionesProyecto(proyecto._id,proyectoC.versionPage)">Todas.</button>
+                              </td>
+                            </tr>
+                          </tbody>
+                      </table>
+                              <li class="animate-repeat" ng-if="proyectoC.listaProyectos.proyectos === 0">
+                                <strong>No hay proyectos...</strong>
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="card" >
+                    <div class="header">
+                        <h4 class="title">Versión</h4>
+                          <div class="legend pull-right">
+                              <i class="fa fa-circle text-success"></i> Activa
+                              <i class="fa fa-circle text-danger"></i> Cerrada
+                              <i class="fa fa-circle text-primary"></i> En preparación
+                          </div>
+                    </div>
+                    <div class="content">
+                        <div id="chartHours" class="ct-chart">
+                          <table class="table table-hover table-striped">
+                            <thead><tr><th>Nº de Version</th><th>Estado</th><th>Descripción</th><th>ModLog</th><th>Edit</th></tr></thead>
+                              <tbody>
+                                <tr ng-repeat="version in proyectoC.listaVersionesProyecto.versions">
+                                  <td>{{version.numVersion}}</td>
+                                  <td>
+                                    <div class="activa" ng-show="version.estado == '58b010fc66c2123fc13cc95b'">
+                                        <i class="fa fa-circle text-success"></i> Activa
+                                    </div>
+                                    <div class="pendiente" ng-show="version.estado == '58b0110866c2123fc13cc95c'">
+                                        <i class="fa fa-circle text-primary"></i> En preparación
+                                    </div>
+                                    <div class="cerrado" ng-show="version.estado == '58b0111066c2123fc13cc95d'">
+                                        <i class="fa fa-circle text-danger"></i> Cerrada
+                                    </div>
+                                       <!-- {{version.estado}} -->
+                                  </td>
+                                  <td>
+                                     {{version.descripcion}}
+                                  </td>
+                                  <td>
+                                    <button class="btn btn-info btn-fill" ng-click="proyectoC.getModLogsVersion(version._id,1,version.numVersion)">Ver.</button>
+                                  </td>
+                                  <td>
+                                    <a href="#" ng-click="proyectoC.getVersionEdit(version._id)"><i class="pe-7s-edit" ></i></a>
+                                  </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                             <table>
+                                <tr>
+                                <tr>
+                                  <td>
+                                    <button class="btn btn-warning  pull-left" ng-show="proyectoC.versionPage>1" ng-click="proyectoC.getVersionesProyecto(proyectoC.proyectoSeleccionadoId,proyectoC.versionPage-1)">Anterior</button>
+                                    <button class="btn btn-warning pull-left" ng-show="proyectoC.listaVersionesProyecto.showMore" ng-click="proyectoC.getVersionesProyecto(proyectoC.proyectoSeleccionadoId,proyectoC.versionPage+1)">Siguiente</button>
+                                    <button class="btn btn-success mi-imagen-abajo-derecha" ng-show="proyectoC.proyectoSeleccionado" ng-click="proyectoC.nuevaVersion()">Crear nueva versión.</button>
+                                  </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" ng-show="proyectoC.showModLog">
+            <div class="col-md-12">
+                <div class="card"  >
+                    <div class="header">
+                        <h4 class="title">Log de Modificaciones: {{proyectoC.versionName}}</h4>
+                        <div class="legend pull-right">
+                            <i class="fa fa-circle text-primary"></i> Pendiente
+                            <i class="fa fa-circle text-warning"></i> En proceso
+                            <i class="fa fa-circle text-success"></i> Finalizado
+                        </div>
+                    </div>
+                    <div class="content modlog">
+                      <table class="table table-hover table-striped">
+                        <thead><tr><th>Nº de ModLog</th><th>Nombre</th><th>Estado</th><th>Version</th><th>Modulo</th><th>Edit</th></tr></thead>
+                          <tbody>
+                            <tr ng-repeat="modlog in proyectoC.listaModLogVersiones.modlogs">
+                              <td class="diezpp">{{$index+1}} #{{modlog.ref}}</td>
+                              <td>{{modlog.nombre}}</td>
+                              <td>
+                                <div class="activa" ng-show="modlog.estado._id == '58b010fc66c2123fc13cc95b'">
+                                    <i class="fa fa-circle text-primary"></i> Pendiente
+                                </div>
+                                <div class="pendiente" ng-show="modlog.estado._id == '58b0110866c2123fc13cc95c'">
+                                    <i class="fa fa-circle text-warning"></i> En preparación
+                                </div>
+                                <div class="cerrado" ng-show="modlog.estado._id == '58b0111066c2123fc13cc95d'">
+                                    <i class="fa fa-circle text-success"></i> Finalizado
+                                </div>
+                                   <!-- {{version.estado}} -->
+                              </td>
+                              <td>
+                                 {{modlog.version.numero}}
+                              </td>
+                              <td>
+                              <span ng-show="modlog.modulo.tipo==='C'">Contabilidad</span>
+                              <span ng-show="modlog.modulo.tipo==='N'">Nominas</span>
+                              <span ng-show="modlog.modulo.tipo==='P'">Proyectos</span>
+                              <span ng-show="modlog.modulo.tipo==='O'">Otros</span>
+                              </td>
+                              <td>
+                                <a href="#" ng-click="proyectoC.getModLogEdit(modlog._id)"><i class="pe-7s-edit" ></i></a>
+                              </td>
+                            </tr>
+                          </tbody>
+                         </table>
+                         <table>
+                            <tr>
+                              <td>
+                                <button class="btn btn-warning" ng-click="proyectoC.backModLogVersion()">Atras</button>
+                                <button class="btn btn-warning" ng-show="proyectoC.modlogPage>1" ng-click="proyectoC.getModLogsVersion(proyectoC.versionSeleccionadaId,proyectoC.modlogPage-1,proyectoC.versionName)">Anterior</button>
+                                <button class="btn btn-warning" ng-show="proyectoC.listaModLogVersiones.showMore" ng-click="proyectoC.getModLogsVersion(proyectoC.versionSeleccionadaId,proyectoC.modlogPage+1,proyectoC.versionName)">Siguiente</button>
+                                <button class="btn btn-success" ng-click="proyectoC.nuevoModLog()">Crear nuevo modlog.</button>
+                              </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!--modlogs-->
+
+              <div class="row" ng-show="proyectoC.showEditModLog">
+               <div class="col-md-12">
+                <div class="card-nh">
+                 <div class="header">
+                  <h4 class="title">Editar ModLog</h4>
+                 </div>
+                 <div class="content">
+                  <form>
+                    <div class="row" >
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Version</label>
+                                    <input readonly ng-model="proyectoC.versionSeleccionadaId" type="text" class="form-control" placeholder="Version">
+                            </div>
+                    </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Estado</label>
+                                    <select ng-model="proyectoC.editModLog.estado" class="form-control" placeholder="Estado">
+                                      <option  ng-selected='proyectoC.editModLog.estado.tipo==="A"' value='A'>Pendiente</option>
+                                      <option  ng-selected='proyectoC.editModLog.estado.tipo==="P"' value='P' >En preparacion</option>
+                                      <option  ng-selected='proyectoC.editModLog.estado.tipo==="F"' value='F'>Finalizado</option>
+
+                                    </select>
+                            </div>
+                    </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Modulo</label>
+                                    <select ng-model="proyectoC.editModLog.modulo" class="form-control" placeholder="Estado">
+                                      <option  ng-selected='proyectoC.editModLog.modulo.tipo==="C"' value='C'>Contabilidad</option>
+                                      <option  ng-selected='proyectoC.editModLog.modulo.tipo==="N"' value='N'>Nominas</option>
+                                      <option  ng-selected='proyectoC.editModLog.modulo.tipo==="P"' value='P'>Proyectos</option>
+                                      <option  ng-selected='proyectoC.editModLog.modulo.tipo==="O"' value='O'>Otro</option>
+                                    </select>
+                    </div>
+                    </div>
+                    <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>#Ref</label>
+                                    <input  ng-model="proyectoC.editModLog.ref" type="text" class="form-control" placeholder="#Ref">
+                    </div>
+                    </div>
+                    <div class="col-md-12">
+                            <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input ng-model="proyectoC.editModLog.nombre" rows="5" class="form-control" placeholder="Escribe ael nombre del ModLog">
+                            </div>
+                    </div>
+                    <div class="col-md-12">
+                            <div class="form-group">
+                                    <label>Descripcion</label>
+                                    <textarea ng-model="proyectoC.editModLog.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion del ModLog">
+                                    </textarea>
+                            </div>
+                    </div>
+              </div>
+              <button ng-click="proyectoC.deleteModLog(proyectoC.editModLog._id)" type="submit" class="btn btn-danger btn-fill pull-left">Eliminar</button>
+              <button ng-click="proyectoC.actualizarModLog(proyectoC.editModLog._id)" type="submit" class="btn btn-info btn-fill pull-right">Actualizar</button>
+              <button class="btn btn-warning pull-right" ng-click="proyectoC.backModLogs()">Atras</button>
+              <div class="clearfix"></div>
+              </form>
+              </div>
+              </div>
+              </div>
+            </div> <!--edit Modlog-->
+        <div class="row" ng-show="proyectoC.showEditVersion">
+         <div class="col-md-12">
+          <div class="card-nh">
+           <div class="header">
+            <h4 class="title">Editar Version</h4>
+           </div>
+           <div class="content">
+            <form>
+
+
+      <div class="row" >
+              <div class="col-md-4">
+                      <div class="form-group">
+                              <label>Proyecto</label>
+                              <input ng-model="proyectoC.editVersion.proyecto.nombre" type="text" class="form-control" placeholder="Proyecto">
+              </div>
+              </div>
+              <div class="col-md-4">
+                      <div class="form-group">
+                              <label>Version</label>
+                              <input ng-model="proyectoC.editVersion.numero" type="text" class="form-control" placeholder="Version">
+                      </div>
+              </div>
+              <div class="col-md-4">
+                      <div class="form-group">
+                              <label>Estado</label>
+                              <select ng-model="proyectoC.editVersion.estado" class="form-control" placeholder="Estado">
+                                <option  value='A' ng-selected='proyectoC.editVersion.estado.tipo==="A"'>Activa</option>
+                                <option  value='P' ng-selected='proyectoC.editVersion.estado.tipo==="P"'>En preparacion</option>
+                                <option  value='F' ng-selected='proyectoC.editVersion.estado.tipo==="F"'>Cerrada</option>
+
+                              </select>
+                      </div>
+              </div>
+              <div class="col-md-12">
+                      <div class="form-group">
+                              <label>Descripcion</label>
+                              <textarea ng-model="proyectoC.editVersion.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion de la version">
+                              </textarea>
+                      </div>
+              </div>
+      </div>
+      <button ng-click="proyectoC.deleteVersion(proyectoC.editVersion._id)" type="submit" class="btn btn-danger btn-fill pull-left">Eliminar</button>
+      <button ng-click="proyectoC.actualizarVersion(proyectoC.editVersion._id)" type="submit" class="btn btn-info btn-fill pull-right">Actualizar</button>
+      <button class="btn btn-warning pull-right" ng-click="proyectoC.backVersionEdit()">Atras</button>
+      <div class="clearfix"></div>
+      </form>
+    </div>
+  </div>
+</div>
+</div> <!--EditVer-->
+
+<div class="row" ng-show="proyectoC.showCreaVersion">
+<div class="col-md-12">
+<div class="card-nh">
+ <div class="header">
+  <h4 class="title">Crear Version</h4>
+ </div>
+ <div class="content">
+  <form>
+
+
+<div class="row" >
+    <div class="col-md-4">
+            <div class="form-group">
+                    <label>Proyecto</label>
+                    <input readonly ng-model="proyectoC.proyectoSeleccionadoId" type="text" class="form-control" placeholder="Proyecto">
+    </div>
+    </div>
+    <div class="col-md-4">
+            <div class="form-group">
+                    <label>Version</label>
+                    <input ng-model="proyectoC.creaVersion.numero" type="text" class="form-control" placeholder="Version">
+            </div>
+    </div>
+    <div class="col-md-4">
+            <div class="form-group">
+                    <label>Estado</label>
+                    <select ng-model="proyectoC.creaVersion.estado" class="form-control" placeholder="Estado">
+                      <option  value='A'>Activa</option>
+                      <option ng-selected="true"  value='P' >En preparacion</option>
+                      <option  value='F'>Cerrada</option>
+
+                    </select>
+            </div>
+    </div>
+    <div class="col-md-12">
+            <div class="form-group">
+                    <label>Descripcion</label>
+                    <textarea ng-model="proyectoC.creaVersion.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion de la version">
+                    </textarea>
+            </div>
+    </div>
+</div>
+<button class="btn btn-warning" ng-click="proyectoC.backVersionCrear()">Atras</button>
+<button ng-click="proyectoC.creaVersion(proyectoC.creaVersion._id)" type="submit" class="btn btn-info btn-fill pull-right">Crear</button>
+<div class="clearfix"></div>
+</form>
+</div>
+</div>
+</div>
+</div> <!--creaver-->
+
+<div class="row" ng-show="proyectoC.showcreaModLog">
+<div class="col-md-12">
+<div class="card-nh">
+<div class="header">
+<h4 class="title">Crear ModLog</h4>
+</div>
+<div class="content">
+<form>
+
+
+<div class="row" >
+
+<div class="col-md-3">
+      <div class="form-group">
+              <label>Version</label>
+              <input readonly ng-model="proyectoC.versionSeleccionadaId" type="text" class="form-control" placeholder="Version">
+      </div>
+</div>
+<div class="col-md-3">
+      <div class="form-group">
+              <label>Estado</label>
+              <select ng-model="proyectoC.creaModLog.estado" class="form-control" placeholder="Estado">
+                <option  value='A'>Pendiente</option>
+                <option ng-selected="true"  value='P' >En preparacion</option>
+                <option  value='F'>Finalizado</option>
+
+              </select>
+      </div>
+</div>
+<div class="col-md-3">
+      <div class="form-group">
+              <label>Modulo</label>
+              <select ng-model="proyectoC.creaModLog.modulo" class="form-control" placeholder="Estado">
+                <option  value='C'>Contabilidad</option>
+                <option  value='N'>Nominas</option>
+                <option  value='P'>Proyectos</option>
+                <option selected  value='O' >Otro</option>
+              </select>
+</div>
+</div>
+<div class="col-md-3">
+      <div class="form-group">
+              <label>Número</label>
+              <input  ng-model="proyectoC.creaModLog.numero" type="text" class="form-control" placeholder="Número">
+</div>
+</div>
+<div class="col-md-12">
+      <div class="form-group">
+              <label>Nombre</label>
+              <input ng-model="proyectoC.creaModLog.nombre" rows="5" class="form-control" placeholder="Escribe ael nombre del ModLog">
+      </div>
+</div>
+<div class="col-md-12">
+      <div class="form-group">
+              <label>Descripcion</label>
+              <textarea ng-model="proyectoC.creaModLog.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion del ModLog">
+              </textarea>
+      </div>
+</div>
+</div>
+<button class="btn btn-warning" ng-click="proyectoC.backModLogCrear()">Atras</button>
+<button ng-click="proyectoC.creaModLog(proyectoC.creaModLog._id)" type="submit" class="btn btn-info btn-fill pull-right">Crear</button>
+<div class="clearfix"></div>
+</form>
+</div>
+</div>
+</div>
+</div> <!--crea modlog-->
+
+
+
+    </div>
+</div>

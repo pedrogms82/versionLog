@@ -17,7 +17,8 @@ var BugSchema = Schema ({
     version: { type: Schema.ObjectId , ref: 'Version'},
     proyecto: { type: Schema.ObjectId , ref: 'Proyecto'},
     modlog: { type: Schema.ObjectId , ref: 'ModLog'},
-    resolucion: String
+    resolucion: String,
+    resuelto: Boolean
 });
 
 module.exports = mongoose.model('Bug', BugSchema);

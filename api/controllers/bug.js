@@ -13,7 +13,6 @@ var Bug = require('../models/bug');
 //Metodos
 function getBug(req, res) {
   var bugId = req.params.id;
-  console.log("Bug");
 
   Bug.findById(bugId).populate([{path: 'modulo'},{path: 'estado'},{path: 'version', populate: { path: 'proyecto', model: 'Proyecto'}}]).exec((err, bug)=>{
     if(err) res.status(500).send({message: 'Error en el server'});
@@ -29,7 +28,7 @@ function getBugsActive(req, res){
     if(req.params.page) var page = req.params.page;
     else var page = 1;
     var itemPerPage = 9;
-    
+
     var find = Bug.find({estado: ['58b010fc66c2123fc13cc95b','58b0110866c2123fc13cc95c']}).sort('ref');
     find.populate([
         {path: 'estado'},
@@ -52,12 +51,16 @@ function saveBug(req, res){
   console.log(params);
 
   bug.ref = params.ref;
-  bug.nombre = params.nombre;
+  bug.pantalla = params.pantalla;
+  bug.rejilla = params.rejilla;
+  bug.proceso = params.proceso;
   bug.descripcion = params.descripcion;
-//  bug.campos = 'null';
+  bug.concepto = params.concepto;
+  bug.usuario = params.usuario;
   bug.modulo = params.modulo;
   bug.estado = params.estado;
-  bug.version = params.version;
+  bug.proyecto = params.proyecto;
+
 
   bug.save((err, bugStored) => {
     if(err) res.status(500).send({message: 'Error en el server'});
@@ -96,8 +99,11 @@ function getBugs(req, res){
 function updateBug(req, res){
   var bugId = req.params.id;
   var update = req.body;
+  console.log("Update");
+  console.log(update);
 
   Bug.findByIdAndUpdate(bugId, update, (err, bugUpdated)=>{
+    console.log(bugUpdated);
     if(err) res.status(404).send({message: 'Error server'});
     else {
       if(!bugUpdated) res.status(404).send({message: 'No hay bugs'});

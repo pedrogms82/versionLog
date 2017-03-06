@@ -1,14 +1,13 @@
 <div class="content">
     <div class="container-fluid">
                   <!-- Ver Bugs  -->
-                      <div class="row">
+                      <div class="row" ng-show="bugC.showListaBugs">
                           <div class="col-md-12">
                                   <div class="header">
                                     <div class="card"  >
                                       <h4 class="title ">Listado de Incidencias</h4>
                                       <div class="legend pull-right">
                                           <i class="fa fa-circle text-primary"></i> Abierta
-                                          <i class="fa fa-circle text-warning"></i> En proceso
                                           <i class="fa fa-circle text-success"></i> Finalizada
                                       </div>
 
@@ -49,7 +48,7 @@
                                             <span ng-show="Bugs.modulo.tipo==='O'">Otros</span>
                                             </td>
                                             <td>
-                                              <a href="#" ng-click="bugC.getBugEdit(Bugs._id)"><i class="pe-7s-edit" ></i></a>
+                                              <a ng-click="bugC.getBugEdit(Bugs._id)"><i class="pe-7s-edit" ></i></a>
                                             </td>
                                           </tr>
                                         </tbody>
@@ -58,8 +57,8 @@
                                           <tr>
                                             <td>
                                               <!-- <button class="btn btn-warning" ng-click="bugC.backModLogVersion()">Atras</button> -->
-                                              <button class="btn btn-info" ng-show="bugC.showAbiertos" ng-click="bugC.backModLogVersion()">Abiertos</button>
-                                              <button class="btn btn-info" ng-show="bugC.showTodos" ng-click="bugC.backModLogVersion()">Todos</button>                                              
+                                              <button class="btn btn-info" ng-show="bugC.showAbiertos" ng-click="bugC.getBugsAbiertos(bugC.bugsPage)">Abiertos</button>
+                                              <button class="btn btn-info" ng-show="bugC.showTodos" ng-click="bugC.getBugs(bugC.bugsPage)">Todos</button>
                                               <button class="btn btn-warning" ng-show="bugC.bugsPage>1" ng-click="bugC.getModLogsVersion(bugC.versionSeleccionadaId,bugC.modlogPage-1,bugC.versionName)">Anterior</button>
                                               <button class="btn btn-warning" ng-show="bugC.listaBugs.showMore" ng-click="bugC.getModLogsVersion(bugC.versionSeleccionadaId,bugC.modlogPage+1,bugC.versionName)">Siguiente</button>
                                               <button class="btn btn-success" ng-click="bugC.nuevoBug()">Crear nuevo Bug.</button>
@@ -76,11 +75,11 @@
 
 
                       <!-- Crear Bug -->
-                      <div class="row" ng-show="bugC.showcreaModLog">
+                      <div class="row" ng-show="bugC.showCreaBug">
                       <div class="col-md-12">
                       <div class="card-nh">
                       <div class="header">
-                      <h4 class="title">Crear ModLog</h4>
+                      <h4 class="title">Crear Incidencia</h4>
                       </div>
                       <div class="content">
                       <form>
@@ -90,16 +89,22 @@
 
                       <div class="col-md-3">
                             <div class="form-group">
-                                    <label>Version</label>
-                                    <input readonly ng-model="bugC.versionSeleccionadaId" type="text" class="form-control" placeholder="Version">
+                                    <label>Aplicacion</label>
+                                    <select ng-model="bugC.appSeleccionada" class="form-control" placeholder="Aplicacion">
+                                      <option ng-selected="{{operator.value == filterCondition.operator}}"
+                                              ng-repeat="App in bugC.listaApps.proyectos"
+                                              value="{{App._id}}">
+                                        {{App.nombre}}
+                                      </option>
+                                    </select>
+
                             </div>
                       </div>
                       <div class="col-md-3">
                             <div class="form-group">
                                     <label>Estado</label>
-                                    <select ng-model="bugC.creaModLog.estado" class="form-control" placeholder="Estado">
-                                      <option  value='A'>Pendiente</option>
-                                      <option ng-selected="true"  value='P' >En preparacion</option>
+                                    <select ng-model="bugC.creaBug.estado" class="form-control" placeholder="Estado">
+                                      <option  ng-selected="true"  value='A'>Abierta</option>
                                       <option  value='F'>Finalizado</option>
 
                                     </select>
@@ -108,7 +113,7 @@
                       <div class="col-md-3">
                             <div class="form-group">
                                     <label>Modulo</label>
-                                    <select ng-model="bugC.creaModLog.modulo" class="form-control" placeholder="Estado">
+                                    <select ng-model="bugC.creaBug.modulo" class="form-control" placeholder="Modulo">
                                       <option  value='C'>Contabilidad</option>
                                       <option  value='N'>Nominas</option>
                                       <option  value='P'>Proyectos</option>
@@ -118,26 +123,50 @@
                       </div>
                       <div class="col-md-3">
                             <div class="form-group">
-                                    <label>Número</label>
-                                    <input  ng-model="bugC.creaModLog.numero" type="text" class="form-control" placeholder="Número">
+                                    <label>Referencia</label>
+                                    <input  ng-model="bugC.creaBug.ref" type="text" class="form-control" placeholder="Referencia">
+                            </div>
                       </div>
+                      <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Usuario</label>
+                                    <input  ng-model="bugC.creaBug.usuario" type="text" class="form-control" placeholder="Usuario">
+                            </div>
+                      </div>
+                      <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Pantalla</label>
+                                    <input  ng-model="bugC.creaBug.pantalla" type="text" class="form-control" placeholder="Pantalla">
+                            </div>
+                      </div>
+                      <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Rejilla</label>
+                                    <input  ng-model="bugC.creaBug.rejilla" type="text" class="form-control" placeholder="Rejilla">
+                            </div>
+                      </div>
+                      <div class="col-md-3">
+                            <div class="form-group">
+                                    <label>Proceso</label>
+                                    <input  ng-model="bugC.creaBug.proceso" type="text" class="form-control" placeholder="Proceso">
+                            </div>
                       </div>
                       <div class="col-md-12">
                             <div class="form-group">
-                                    <label>Nombre</label>
-                                    <input ng-model="bugC.creaModLog.nombre" rows="5" class="form-control" placeholder="Escribe ael nombre del ModLog">
+                                    <label>Concepto</label>
+                                    <input ng-model="bugC.creaBug.concepto" rows="5" class="form-control" placeholder="Escribe un concepto para la incidencia">
                             </div>
                       </div>
                       <div class="col-md-12">
                             <div class="form-group">
                                     <label>Descripcion</label>
-                                    <textarea ng-model="bugC.creaModLog.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion del ModLog">
+                                    <textarea ng-model="bugC.creaBug.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion de la incidencia">
                                     </textarea>
                             </div>
                       </div>
                       </div>
-                      <button class="btn btn-warning" ng-click="bugC.backModLogCrear()">Atras</button>
-                      <button ng-click="bugC.creaModLog(bugC.creaModLog._id)" type="submit" class="btn btn-info btn-fill pull-right">Crear</button>
+                      <button class="btn btn-warning" ng-click="bugC.backBugCrear()">Atras</button>
+                      <button ng-click="bugC.creaBug()" type="submit" class="btn btn-info btn-fill pull-right">Crear</button>
                       <div class="clearfix"></div>
                       </form>
                       </div>
@@ -146,66 +175,100 @@
                     </div>
                     <!--crea bug-->
                     <!--edit bug-->
-                    <div class="row" ng-show="bugC.showEditModLog">
+                    <div class="row" ng-show="bugC.showEditBug">
                      <div class="col-md-12">
                       <div class="card-nh">
                        <div class="header">
-                        <h4 class="title">Editar ModLog</h4>
+                        <h4 class="title">Editar Incidencia</h4>
                        </div>
                        <div class="content">
-                        <form>
-                          <div class="row" >
-                          <div class="col-md-3">
-                                  <div class="form-group">
-                                          <label>Version</label>
-                                          <input readonly ng-model="bugC.versionSeleccionadaId" type="text" class="form-control" placeholder="Version">
-                                  </div>
-                          </div>
-                          <div class="col-md-3">
-                                  <div class="form-group">
-                                          <label>Estado</label>
-                                          <select ng-model="bugC.editModLog.estado" class="form-control" placeholder="Estado">
-                                            <option  ng-selected='bugC.editModLog.estado.tipo==="A"' value='A'>Pendiente</option>
-                                            <option  ng-selected='bugC.editModLog.estado.tipo==="P"' value='P' >En preparacion</option>
-                                            <option  ng-selected='bugC.editModLog.estado.tipo==="F"' value='F'>Finalizado</option>
+                         <form>
 
-                                          </select>
-                                  </div>
-                          </div>
-                          <div class="col-md-3">
-                                  <div class="form-group">
-                                          <label>Modulo</label>
-                                          <select ng-model="bugC.editModLog.modulo" class="form-control" placeholder="Estado">
-                                            <option  ng-selected='bugC.editModLog.modulo.tipo==="C"' value='C'>Contabilidad</option>
-                                            <option  ng-selected='bugC.editModLog.modulo.tipo==="N"' value='N'>Nominas</option>
-                                            <option  ng-selected='bugC.editModLog.modulo.tipo==="P"' value='P'>Proyectos</option>
-                                            <option  ng-selected='bugC.editModLog.modulo.tipo==="O"' value='O'>Otro</option>
-                                          </select>
-                          </div>
-                          </div>
-                          <div class="col-md-3">
-                                  <div class="form-group">
-                                          <label>#Ref</label>
-                                          <input  ng-model="bugC.editModLog.ref" type="text" class="form-control" placeholder="#Ref">
-                          </div>
-                          </div>
-                          <div class="col-md-12">
-                                  <div class="form-group">
-                                          <label>Nombre</label>
-                                          <input ng-model="bugC.editModLog.nombre" rows="5" class="form-control" placeholder="Escribe ael nombre del ModLog">
-                                  </div>
-                          </div>
-                          <div class="col-md-12">
-                                  <div class="form-group">
-                                          <label>Descripcion</label>
-                                          <textarea ng-model="bugC.editModLog.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion del ModLog">
-                                          </textarea>
-                                  </div>
-                          </div>
-                    </div>
-                    <button ng-click="bugC.deleteModLog(bugC.editModLog._id)" type="submit" class="btn btn-danger btn-fill pull-left">Eliminar</button>
-                    <button ng-click="bugC.actualizarModLog(bugC.editModLog._id)" type="submit" class="btn btn-info btn-fill pull-right">Actualizar</button>
-                    <button class="btn btn-warning pull-right" ng-click="bugC.backModLogs()">Atras</button>
+
+                         <div class="row" >
+
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Aplicacion</label>
+                                       <input readonly ng-model="bugC.editBug.proyecto" class="form-control" placeholder="Aplicacion">
+                                 </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Estado</label>
+                                       <select ng-model="bugC.editBug.estado" class="form-control" placeholder="Estado">
+                                         <option  value='A' ng-selected='bugC.editBug.estado.tipo==="A"'>Abierta</option>
+                                         <option  value='F' ng-selected='bugC.editBug.estado.tipo==="F"'>Finalizado</option>
+
+                                       </select>
+                               </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Modulo</label>
+                                       <select ng-model="bugC.editBug.modulo" class="form-control" placeholder="Modulo">
+                                         <option  value='C' ng-selected='bugC.editBug.modulo.tipo==="C"'>Contabilidad</option>
+                                         <option  value='N' ng-selected='bugC.editBug.modulo.tipo==="N"'>Nominas</option>
+                                         <option  value='P' ng-selected='bugC.editBug.modulo.tipo==="P"'>Proyectos</option>
+                                         <option  value='O' ng-selected='bugC.editBug.modulo.tipo==="O"'>Otro</option>
+                                       </select>
+                         </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Referencia</label>
+                                       <input  ng-model="bugC.editBug.ref" type="text" class="form-control" placeholder="Referencia">
+                               </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Usuario</label>
+                                       <input  ng-model="bugC.editBug.usuario" type="text" class="form-control" placeholder="Usuario">
+                               </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Pantalla</label>
+                                       <input  ng-model="bugC.editBug.pantalla" type="text" class="form-control" placeholder="Pantalla">
+                               </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Rejilla</label>
+                                       <input  ng-model="bugC.editBug.rejilla" type="text" class="form-control" placeholder="Rejilla">
+                               </div>
+                         </div>
+                         <div class="col-md-3">
+                               <div class="form-group">
+                                       <label>Proceso</label>
+                                       <input  ng-model="bugC.editBug.proceso" type="text" class="form-control" placeholder="Prpceso">
+                               </div>
+                         </div>
+                         <div class="col-md-12">
+                               <div class="form-group">
+                                       <label>Concepto</label>
+                                       <input ng-model="bugC.editBug.concepto" rows="5" class="form-control" placeholder="Escribe un concepto para la incidencia">
+                               </div>
+                         </div>
+                         <div class="col-md-12">
+                               <div class="form-group">
+                                       <label>Descripcion</label>
+                                       <textarea ng-model="bugC.editBug.descripcion" rows="5" class="form-control" placeholder="Escribe aqui la descripcion de la incidencia">
+                                       </textarea>
+                               </div>
+                         </div>
+                         <div class="col-md-12">
+                               <div class="form-group">
+                                       <label>Resolución</label>
+                                       <textarea ng-model="bugC.editBug.resolucion" rows="5" class="form-control" placeholder="Escribe aqui la resolucion de la incidencia">
+                                       </textarea>
+                               </div>
+                         </div>
+                         </div>
+                    <button ng-click="bugC.deleteBug(bugC.editBug._id)" type="submit" class="btn btn-danger btn-fill pull-left">Eliminar</button>
+                    <button ng-click="bugC.crearModLog(bugC.editBug)" type="submit" class="btn btn-info btn-fill pull-right">Crear ModLog</button>
+                    <button ng-click="bugC.actualizarBug(bugC.editBug._id)" type="submit" class="btn btn-success btn-fill pull-right">Actualizar</button>
+                    <button class="btn btn-warning pull-right" ng-click="bugC.backBugEdit()">Atras</button>
                     <div class="clearfix"></div>
                     </form>
                     </div>

@@ -4,6 +4,8 @@ uploads
 .gitmessage.txt
 # Created by https://www.gitignore.io/api/node
 
+#demo template
+demo
 ### Node ###
 # Logs
 logs

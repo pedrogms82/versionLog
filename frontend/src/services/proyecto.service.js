@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('versionLog')
-.constant('apiUrl', "http://localhost:3977/api/")
+.constant('apiUrl', "http://192.168.50.12:3010/api/")
 .service('proyectoService',proyectoService);
 
 proyectoService.$inject = ['$http','apiUrl'];

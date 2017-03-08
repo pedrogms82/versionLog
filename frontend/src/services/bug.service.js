@@ -2,11 +2,11 @@
 'use strict';
 
 angular.module('versionLog')
-.constant('apiUrl', "http://localhost:3977/api/")
+.constant('apiUrl', "http://192.168.50.12:3010/api/")
 .service('bugService',bugService);
 
-bugService.$inject = ['$http','apiUrl'];
-function bugService($http,apiUrl){
+bugService.$inject = ['$http','apiUrl','nameService'];
+function bugService($http,apiUrl, nameService){
   var Servicio = this;
 
   Servicio.getBug = function (bugId){
@@ -80,6 +80,7 @@ function bugService($http,apiUrl){
    });
  }
  Servicio.actualizarBug =  function (bugId, bugData){
+   console.log("bugData");
    console.log(bugData);
    $http.defaults.headers.common.Authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI';
    return $http({

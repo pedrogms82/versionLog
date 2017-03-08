@@ -2,7 +2,7 @@
 'use strict';
 
 angular.module('versionLog')
-.constant('apiUrl', "http://localhost:3977/api/")
+.constant('apiUrl', "http://192.168.50.12:3010/api/")
 .controller('bugController',bugController);
 
 bugController.$inject = ['bugService','proyectoService'];
@@ -169,12 +169,15 @@ function bugController(bugService, proyectoService) {
       console.log( Controller.editBug.estado.tipo);
       if (Controller.editBug.estado.tipo===Controller.Estados[0].tipo) Controller.editBug.estadoShowA = true;
       else if (Controller.editBug.estado.tipo===Controller.Estados[2].tipo) Controller.editBug.estadoShowF = true;
+
+
       },
       function error(){
         console.log("Error en la segunda promesa");
       });
     };
     Controller.actualizarBug = function (bugId) {
+      console.log("estado");
       console.log(Controller.editBug.estado);
       if (Controller.editBug.estado==='A') Controller.editBug.estado= Controller.Estados[0]._id;
       else if (Controller.editBug.estado==='F') Controller.editBug.estado= Controller.Estados[2]._id;
@@ -199,7 +202,7 @@ function bugController(bugService, proyectoService) {
           usuario: Controller.editBug.usuario,
           modulo: Controller.editBug.modulo,
           estado: Controller.editBug.estado,
-          proyecto: Controller.editBug.proyecto
+          proyecto: Controller.editBug.proyecto._id
           };
         console.log("bugData");
         console.log(bugData);

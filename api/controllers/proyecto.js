@@ -23,7 +23,7 @@ function getProyecto(req, res) {
 function getProyectos(req, res){
   if(req.params.page) var page = req.params.page;
   else var page = 1;
-    var itemPerPage = 3;
+    var itemPerPage = 6;
     Proyecto.find().sort('nombre').paginate(page, itemPerPage, function (err, proyectos, total){
         if (err) res.status(500).send({message: 'Error en petición proyectos'});
         else{
@@ -100,11 +100,24 @@ function deleteProyecto (req, res){
   }//else artist
 });//Artist find
 }
+
+function getNombreProyectoById(req, res){
+  var proyectoId = req.params.id;
+  Proyecto.findById(proyectoId, (err, proyecto) => {
+    if(err) res.status(500).send({message: 'Error en petición Proyecto'});
+    else{
+      if(!proyecto) res.status(404).send({message: 'No existe Proyecto'});
+      else  res.status(200).send({nombre : proyecto.nombre});
+    }
+  });
+
+}
 //exportamos modulos
 module.exports = {
 getProyecto,
 getProyectos,
 saveProyecto,
 updateProyecto,
-deleteProyecto
+deleteProyecto,
+getNombreProyectoById
 }

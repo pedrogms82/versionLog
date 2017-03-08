@@ -118,6 +118,17 @@ function deleteVersion(req, res){
     }//else version
   });//callback version
 }
+function getNombreVersionById(req, res){
+  var versionId = req.params.id;
+  Version.findById(proyectoId, (err, version) => {
+    if(err) res.status(500).send({message: 'Error en petición version'});
+    else{
+      if(!version) res.status(404).send({message: 'No existe version'});
+      else  res.status(200).send({nombre : version.nombre});
+    }
+  });
+
+}
 //Exportamos modulos
 module.exports = {
   getVersion,
@@ -125,5 +136,6 @@ module.exports = {
   saveVersion,
   updateVersion,
   deleteVersion,
-  getVersionsActive
+  getVersionsActive,
+  getNombreVersionById
 }

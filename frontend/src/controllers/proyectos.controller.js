@@ -2,12 +2,12 @@
 'use strict';
 
 angular.module('versionLog')
-.constant('apiUrl', "http://localhost:3977/api/")
+.constant('apiUrl', "http://192.168.50.12:3010/api/")
 .controller('proyectoController',proyectoController);
 
 
-proyectoController.$inject = ['proyectoService','versionService' ,'modLogService'];
-function proyectoController(proyectoService, versionService, modLogService) {
+proyectoController.$inject = ['proyectoService','versionService' ,'modLogService','nameService'];
+function proyectoController(proyectoService, versionService, modLogService, nameService) {
   var Controller = this;
   //Array de estados
   Controller.Estados = [
@@ -232,6 +232,16 @@ Controller.nuevaVersion = function () {
   Controller.showEditVersion = false;
   Controller.creaVersion.estado = 'P';
   Controller.showProVer = false;
+  var promiseNombreProyecto = nameService.getNombreProyectoById(Controller.proyectoSeleccionadoId);
+  promiseNombreProyecto.then(
+  function success(result){
+    Controller.creaVersion.proyecto = result;
+    console.log(Controller.creaVersion.proyecto);
+
+  },
+  function error(){
+    console.log("Error en la segunda promesa");
+  });
 }
 Controller.creaVersion = function () {
   Controller.showModLog = false;

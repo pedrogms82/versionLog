@@ -9,6 +9,7 @@ var md_auth = require('../middlewares/authenticated');
 // var md_upload = multipart({uploadDir: './uploads/artists'});
 //Creamos las Rutas
 api.get('/proyecto/:id', md_auth.ensureAuth, ProyectoController.getProyecto);
+api.get('/proyecto-nombre/:id', md_auth.ensureAuth, ProyectoController.getNombreProyectoById);
 api.get('/proyectos/:page?', md_auth.ensureAuth, ProyectoController.getProyectos);
 api.post('/proyecto', md_auth.ensureAuth, ProyectoController.saveProyecto);
 api.put('/proyecto/:id', md_auth.ensureAuth, ProyectoController.updateProyecto);
@@ -17,4 +18,3 @@ api.delete('/proyecto/:id', md_auth.ensureAuth, ProyectoController.deleteProyect
 // api.get('/get-image-artist/:imageFile', [md_auth.ensureAuth, md_upload], ArtistController.getImageFile);
 //exportamos modulos
 module.exports = api;
- 

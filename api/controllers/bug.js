@@ -14,7 +14,12 @@ var Bug = require('../models/bug');
 function getBug(req, res) {
   var bugId = req.params.id;
 
-  Bug.findById(bugId).populate([{path: 'modulo'},{path: 'estado'},{path: 'version', populate: { path: 'proyecto', model: 'Proyecto'}}]).exec((err, bug)=>{
+  Bug.findById(bugId).populate([
+      {path: 'estado'},
+      {path: 'modulo'},
+      {path: 'version'},
+      {path: 'proyecto'}
+      ]).exec((err, bug)=>{
     if(err) res.status(500).send({message: 'Error en el server'});
     else{
       if(!bug) res.status(404).send({message: 'No existe'});
@@ -103,7 +108,8 @@ function updateBug(req, res){
   console.log(update);
 
   Bug.findByIdAndUpdate(bugId, update, (err, bugUpdated)=>{
-    console.log(bugUpdated);
+      console.log("bugUpdate");console.log(bugUpdated);
+      console.log("err");console.log(err);
     if(err) res.status(404).send({message: 'Error server'});
     else {
       if(!bugUpdated) res.status(404).send({message: 'No hay bugs'});

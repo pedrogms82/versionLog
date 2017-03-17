@@ -160,10 +160,21 @@ Controller.getModLogEdit = function (modLogId){
   Controller.showCreaModLog = false;
   Controller.showModLog = false;
 
+  var promiseVersiones =   versionService.getVersionesActivas(Controller.proyectoSeleccionadoId);
+  promiseVersiones.then(
+  function success(result){
+    Controller.versiones = result.versions;
+    console.log(Controller.versiones);
+  },
+  function error(){
+    console.log("Error en la segunda promesa");
+  });
+
   var promiseModLog = modLogService.getModLog(modLogId);
   promiseModLog.then(
   function success(result){
   Controller.editModLog = result.modlog;
+  console.log("que tengo en modlog");
   console.log( Controller.editModLog);
   if (Controller.editModLog.estado.tipo===Controller.Estados[0].tipo) Controller.editModLog.estadoShowA = true;
   else if (Controller.editModLog.estado.tipo===Controller.Estados[1].tipo) Controller.editModLog.estadoShowP = true;
@@ -174,14 +185,39 @@ Controller.getModLogEdit = function (modLogId){
   });
 };
 Controller.actualizarModLog = function (modLogId) {
+  console.log("Quiero actualizar");
   console.log(Controller.editModLog);
   if (Controller.editModLog.estado==='A') Controller.editModLog.estado= Controller.Estados[0]._id;
   else if (Controller.editModLog.estado==='P') Controller.editModLog.estado= Controller.Estados[1]._id;
   else if (Controller.editModLog.estado==='F') Controller.editModLog.estado= Controller.Estados[2]._id;
   else Controller.editModLog.estado = Controller.Estados[1]._id;
-  console.log("estado");
-  console.log(Controller.editModLog.estado);
+  // console.log("estado");
+  // console.log(Controller.editModLog.estado);
+  // console.log("que hay en version");
+  // console.log(  Controller.editModLog.version );
+  console.log("Nuevo Version");console.log(Controller.versionNew);
 
+  var promiseVersiones =   versionService.getVersionesActivas(Controller.proyectoSeleccionadoId);
+  promiseVersiones.then(
+  function success(result){
+    Controller.versiones = result.versions;
+    console.log(Controller.versiones);
+  },
+  function error(){
+    console.log("Error en la segunda promesa");
+  });
+
+  console.log("Busco");
+  console.log( Controller.editModLog.version.numero);
+
+  for (var i = 0; i < Controller.versiones.length; i++) {
+        // console.log(Controller.editModLog.version.numero + "  " + Controller.versiones[i].numero);
+    if (Controller.editModLog.version.numero === Controller.versiones[i].numero) {
+        Controller.editModLog.version = Controller.versiones[i];
+        console.log("Encontrado");
+        console.log( Controller.editModLog.version);
+    }
+  }
 
   if (Controller.editModLog.modulo==='C') Controller.editModLog.modulo= Controller.Modulos[0]._id;
   else if (Controller.editModLog.modulo==='N') Controller.editModLog.modulo= Controller.Modulos[1]._id;
@@ -193,11 +229,11 @@ Controller.actualizarModLog = function (modLogId) {
       nombre: Controller.editModLog.nombre,
       descripcion: Controller.editModLog.descripcion,
       estado: Controller.editModLog.estado,
-      version: Controller.versionSeleccionadaId,
+      version: Controller.editModLog.version._id,
       modulo: Controller.editModLog.modulo,
       };
 
-    console.log("editModLog");
+    console.log("modLogData");
     console.log(modLogData);
     var promiseVersiones = modLogService.actualizarModLog(modLogId,modLogData);
     promiseVersiones.then(
@@ -285,6 +321,7 @@ var versionData = {
     promiseVersiones.then(
     function success(result){
     Controller.listaVersionesProyecto = result;
+    console.log(result);
     Controller.listaVersionesProyecto.showMore = false;
 
     if (Controller.listaVersionesProyecto.versions.length == 6) Controller.listaVersionesProyecto.showMore = true;

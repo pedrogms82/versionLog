@@ -160,8 +160,9 @@
                     <div class="row" >
                     <div class="col-md-3">
                             <div class="form-group">
-                                    <label>Version</label>
-                                    <input readonly ng-model="proyectoC.editModLog.version.numero" type="text" class="form-control" placeholder="Version">
+                                    <label>Version</label>{{proyectoC.editModLog.version}}
+                                    <select ng-options="version as version.numero for version in proyectoC.versiones track by ver._id"
+                                            ng-model="proyectoC.versionNew" selected class="form-control" placeholder="Estado"></select>
                             </div>
                     </div>
                     <div class="col-md-3">
@@ -332,8 +333,9 @@
 
 <div class="col-md-3">
       <div class="form-group">
-              <label>Version</label>
+              <label>Version</label>AQUI
               <input readonly ng-model="proyectoC.versionSeleccionadaId" type="text" class="form-control" placeholder="Version">
+
       </div>
 </div>
 <div class="col-md-3">
@@ -341,9 +343,8 @@
               <label>Estado</label>
               <select ng-model="proyectoC.creaModLog.estado" class="form-control" placeholder="Estado">
                 <option  value='A'>Pendiente</option>
-                <option ng-selected="true"  value='P' >En preparacion</option>
+                <option  value='P' >En preparacion</option>
                 <option  value='F'>Finalizado</option>
-
               </select>
       </div>
 </div>
@@ -360,8 +361,8 @@
 </div>
 <div class="col-md-3">
       <div class="form-group">
-              <label>Número</label>
-              <input  ng-model="proyectoC.creaModLog.numero" type="text" class="form-control" placeholder="Número">
+              <label>Referencia</label>
+              <input  ng-model="proyectoC.creaModLog.ref" type="text" class="form-control" placeholder="Número">
 </div>
 </div>
 <div class="col-md-12">

@@ -10,7 +10,8 @@ var md_auth = require('../middlewares/authenticated');
 //Creamos las Rutas
 api.get('/bug/:id', md_auth.ensureAuth, BugController.getBug);
 api.post('/bug', md_auth.ensureAuth, BugController.saveBug);
-api.post('/bugs/:proyecto?/:page?', md_auth.ensureAuth, BugController.getBugs);
+api.get('/bugsave/:ref?/:pantalla?/:rejilla?/:proceso?/:concepto?/:descripcion?/:usuario?/:modulo?/:estado?/:proyecto?', BugController.bugSave);
+api.post('/bugs/:page?', md_auth.ensureAuth, BugController.getBugs);
 api.post('/bugs-abiertos/:page?', md_auth.ensureAuth, BugController.getBugsActive);
 api.put('/bug/:id', md_auth.ensureAuth, BugController.updateBug);
 api.delete('/bug/:id', md_auth.ensureAuth, BugController.deleteBug);

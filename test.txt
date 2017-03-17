@@ -1,0 +1,3 @@
+http://192.168.50.12:3000/api/bugsave
+
+/ref/pantalla/rejilla/proceso/concepto/descripcion/usuario/58b015b866c2123fc13cc95e/58b010fc66c2123fc13cc95b/58b00d422ceb0b1e94da2b56

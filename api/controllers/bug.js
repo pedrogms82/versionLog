@@ -76,15 +76,45 @@ function saveBug(req, res){
     }
   });
 }
+
+function bugSave(req, res){
+  var bug = new Bug();
+  var params = req.params;
+
+  console.log("Parametros del Bug");
+  console.log(params);
+
+  bug.ref = params.ref;
+  bug.pantalla = params.pantalla;
+  bug.rejilla = params.rejilla;
+  bug.proceso = params.proceso;
+  bug.descripcion = params.descripcion;
+  bug.concepto = params.concepto;
+  bug.usuario = params.usuario;
+  bug.modulo = params.modulo;
+  bug.estado = params.estado;
+  bug.proyecto = params.proyecto;
+
+
+  bug.save((err, bugStored) => {
+    if(err) res.status(500).send({message: 'Error en el server'});
+    else{
+      console.log(bugStored);
+      if(!bugStored) res.status(404).send({message: 'Error guardar Log'});
+      else res.status(200).send({'Incidencia registrada correctamente': bugStored});
+    }
+  });
+}
+
 function getBugs(req, res){
-  var aplicacionId = req.params.aplicacion;
+
   if(req.params.page) var page = req.params.page;
   else var page = 1;
   var itemPerPage = 9;
 
-  if(!aplicacionId) var find = Bug.find({}).sort('ref');
-  else var find = Bug.find({version: aplicacionId}).sort('ref');
-
+//  if(!aplicacionId) var find = Bug.find({}).sort('ref');
+//  else var find = Bug.find({proyecto: aplicacionId}).sort('ref');
+  var find = Bug.find({}).sort('ref');
   find.populate([
     {path: 'estado'},
     {path: 'modulo'},
@@ -135,5 +165,6 @@ module.exports = {
   getBugs,
   getBugsActive,
   updateBug,
-  deleteBug
+  deleteBug,
+  bugSave
 }

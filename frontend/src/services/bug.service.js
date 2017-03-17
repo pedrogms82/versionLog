@@ -27,11 +27,10 @@ function bugService($http,apiUrl, nameService){
     });
   }
 
-  Servicio.getBugs = function (aplicacionId,pageCount){
-    if (!aplicacionId) aplicacionId = "0";
+  Servicio.getBugs = function (pageCount){
      return $http({
             method: "POST",
-            url: (apiUrl+'bugs/'+aplicacionId+'/'+pageCount),
+            url: (apiUrl+'bugs/'+pageCount),
             headers: { 'Authorization': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI'}
     }).then(
       function success(result){
@@ -62,7 +61,8 @@ function bugService($http,apiUrl, nameService){
     });
   }
   Servicio.crearBug =  function (bugData){
-    console.log(bugData);
+    console.log("bugData");console.log(bugData);
+    console.log("bugData Objecto to params");console.log(Object.toparams(bugData));
     $http.defaults.headers.common.Authorization = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OGIwMDg3NzhjMGFmZjBmZGMxMWUwZjkiLCJlbWFpbCI6IndlYm1hc3RlckBtcGRsLm9yZyIsInJvbGUiOiJST0xFX0FETUlOIiwiaW1hZ2UiOiJudWxsIiwiaWF0IjoxNDg3OTMxNTczLCJleHAiOjE0OTA1MTk5NzN9.qSShHvkbzFx5rB61b0n7AIqjoYg72Jwz-7y7Gu_GBgI';
     return $http({
            method: "POST",

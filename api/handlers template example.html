@@ -1,0 +1,23 @@
+<h2>Version Log</h2>
+<h3>{{logs}}</h3>
+<table>
+    <tr>
+        <th>Concepto</th>
+    </tr>
+    {{#each logs}}
+    <tr>
+        <td>{{concepto}}</td>
+        <td>{{descripcion}}</td>
+    </tr>
+    {{/each}}
+</table>
+
+{"logs":[
+    {
+    "concepto" : "1",
+    "descripcion" :"blabla"
+    },{
+    "concepto" : "2",
+    "descripcion"    :"blabla"
+    }]
+}

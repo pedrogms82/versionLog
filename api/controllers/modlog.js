@@ -75,6 +75,7 @@ function getModLogs(req, res){
 function updateModLog(req, res){
   var modlogId = req.params.id;
   var update = req.body;
+  console.log(update);
 
   ModLog.findByIdAndUpdate(modlogId, update, (err, modlogUpdated)=>{
     if(err) res.status(404).send({message: 'Error server'});

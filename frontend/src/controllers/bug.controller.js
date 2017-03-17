@@ -12,8 +12,9 @@ function bugController(bugService, proyectoService) {
     Controller.showListaBugs = true;
     Controller.showCreaBug = false;
     Controller.showEditBug = false;
-    Controller.showTodos = false;
-    Controller.showAbiertos = true;
+    Controller.showTodos = true;
+    Controller.showAbiertos = false;
+    Controller.showMore = false;
     Controller.bugsPage = 1;
     Controller.Estados = [
     {tipo:'A', _id:'58b010fc66c2123fc13cc95b'},
@@ -26,40 +27,21 @@ function bugController(bugService, proyectoService) {
     {tipo:'P', _id:'58b015cb66c2123fc13cc960'},
     {tipo:'O', _id:'58b7ec717a174fcbcfd4a5b4'}
     ];
+    var pageCount = 1;
     //Recogemos los bugs totales
-    var promiseBugs = bugService.getBugs();
+    var promiseBugs = bugService.getBugsAbiertos(pageCount);
     promiseBugs.then(
     function success(result){
       Controller.listaBugs = result;
-    console.log(Controller.listaBugs);
-  //  Controller.listaBugs.showMore = false;
-    if (Controller.listaBugs.length == 9) Controller.listaBugs.showMore = true;
+      Controller.bugsPage = pageCount;
+    console.log("getBugs Inicio");console.log(Controller.listaBugs);
+    Controller.showMore = false;
+    if (Controller.listaBugs.bugs.length === 9) Controller.showMore = true;
     },
     function error(){
       console.log("Error en la segunda promesa");
     });
 
-    Controller.getBugs = function () {
-      var promiseBugs = bugService.getBugs();
-      promiseBugs.then(
-      function success(result){
-        Controller.listaBugs = result;
-      console.log(Controller.listaBugs);
-    //  Controller.listaBugs.showMore = false;
-      if (Controller.listaBugs.length == 9) Controller.listaBugs.showMore = true;
-      },
-      function error(){
-        console.log("Error en la segunda promesa");
-      });
-    }
-    Controller.backBugCrear = function (){
-      Controller.showListaBugs = true;
-      Controller.showCreaBug = false;
-    };
-    Controller.backBugEdit = function (){
-      Controller.showListaBugs = true;
-      Controller.showEditBug = false;
-    };
     Controller.getBugs = function(pageCount){
       Controller.showTodos = false;
       Controller.showAbiertos = true;
@@ -70,10 +52,22 @@ function bugController(bugService, proyectoService) {
       promiseBugs.then(
       function success(result){
       Controller.listaBugs = result;
+      Controller.bugsPage = pageCount;
+      console.log("getBugs Next");console.log(Controller.listaBugs);
+      Controller.showMore = false;
+      if (Controller.listaBugs.bugs.length === 9) Controller.showMore = true;
       },
       function error(){
         console.log("Error en la segunda promesa");
       });
+    };
+    Controller.backBugCrear = function (){
+      Controller.showListaBugs = true;
+      Controller.showCreaBug = false;
+    };
+    Controller.backBugEdit = function (){
+      Controller.showListaBugs = true;
+      Controller.showEditBug = false;
     };
 
     Controller.getBugsAbiertos = function(pageCount){

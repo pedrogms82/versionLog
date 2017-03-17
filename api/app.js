@@ -2,7 +2,7 @@
 
 var express = require('express');
 var bodyParser = require('body-parser');
-
+var path = require('path');
 //Creo app
 var app = express();
 
@@ -17,6 +17,12 @@ var UserController = require('./controllers/user');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+//Vistas
+app.set('views', __dirname, 'views');
+app.engine("html", require("ejs").renderFile);
+app.set('view engine', 'html');
+
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Cabeceras http
 app.use((req, res, next)=>{
@@ -34,6 +40,9 @@ app.use((req, res, next)=>{
 // });
 
 //rutas base
+app.get('/', function (req, res, next){
+      res.render('../frontend/index', {title: 'AngularJs Index'});
+})
 app.use('/api', [userRoutes, proyectoRoutes, versionRoutes, modLogRoutes, bugRoutes]);
 
 //Asi seria sin el Router
